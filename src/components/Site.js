@@ -1,17 +1,16 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
 import SwiperGrid from "./grid/SwiperGrid";
-import ViewTitle from "./ViewTitle";
+import ViewTitle from "./video/ViewTitle";
 import TitleGrid from "./grid/TitleGrid";
 import {Redirect, withRouter} from "react-router";
-import AsyncComponent from "./AsyncComponent";
+import AsyncComponent from "./video/AsyncComponent";
 import MoviePremiere from "./premiere/MoviePremiere";
 import ActiveTitle from "./premiere/ActiveTitle";
 import HeroGrid from "./hero/HeroGrid";
-// import OldBoxFeature from "./hero/OldBoxFeature";
 import BoxFeature from "./hero/BoxFeature";
-import NewVideoFeature from "./hero/NewVideoFeature";
-import NavigationBar from "./NavigationBar";
+import NewVideoFeature from "./hero/VideoFeature";
+import NavigationBar from "./navigation/NavigationBar";
 
 const FormatName = (name) => {
   return (name || "")
@@ -174,49 +173,6 @@ class Site extends React.Component {
     return arrangement.map((entry, i) => this.ArrangementEntry(entry, i));
   }
 
-  //USING THIS TO TEST DIFFERENT COMPONENTS
-  TestContent() {
-    if(this.props.siteStore.searchQuery) {
-      return (
-        <TitleGrid
-          noTitlesMessage="No results found"
-          name="Search Results"
-          titles={this.props.siteStore.searchResults}
-          trailers={false}
-          shouldPlay={false}
-          isEpisode={false}
-        />
-      );
-    }
-    // let titles = this.props.siteStore.siteInfo.assets.titles;
-    // let moreTitles = titles.concat(this.props.siteStore.siteInfo.assets.titles);
-
-    return (
-      <React.Fragment>
-        <HeroGrid titles={this.props.siteStore.siteInfo.playlists[1].titles}   />
-        <SwiperGrid name="All Seres" titles={this.props.siteStore.siteInfo.assets.series}    trailers={false} shouldPlay={false} isEpisode={false} isPoster={false}/>
-        <VideoFeature title={this.props.siteStore.siteInfo.assets.titles[1]}    trailers={false} shouldPlay={false} isEpisode={false} />
-        <SwiperGrid name="Most Viewed" titles={this.props.siteStore.siteInfo.assets.titles}    trailers={false} shouldPlay={false} isEpisode={false} isPoster={true}/>
-        <BoxFeature title={this.props.siteStore.siteInfo.assets.titles[2]}    trailers={false} shouldPlay={false} isEpisode={false} />
-        { this.props.siteStore.siteInfo.playlists.map(playlist =>
-          <SwiperGrid
-            key={`title-reel-playlist-${playlist.playlistId}`}
-            name={playlist.name}
-            titles={playlist.titles}
-            trailers={false}
-            shouldPlay={false}
-            isEpisode={false}
-            isPoster={false}
-          />
-        )}
-        <BoxFeature title={this.props.siteStore.siteInfo.assets.titles[3]}    trailers={false} shouldPlay={false} isEpisode={false} />
-        <VideoFeature title={this.props.siteStore.siteInfo.assets.titles[0]}    trailers={false} shouldPlay={false} isEpisode={false} />
-        <SwiperGrid name="All Titles" titles={this.props.siteStore.siteInfo.assets.titles}    trailers={false} shouldPlay={false} isEpisode={false} isPoster={false}/>
-        <TitleGrid name="All Titles" titles={this.props.siteStore.siteInfo.assets.titles}    trailers={false} shouldPlay={false} isEpisode={false} isPoster={true}/>
-      </React.Fragment>
-    );
-  }
-
   ShowVideo() {
     return <ViewTitle key={`active-title-${this.props.siteStore.activeTitle.titleId}`} />;
   }
@@ -228,7 +184,6 @@ class Site extends React.Component {
 
     return <MoviePremiere title={this.props.siteStore.premiere.title} />;
   }
-
 
   render() {
     if(!this.props.rootStore.client || (this.props.match.params.siteSelectorId && !this.props.rootStore.accessCode)) {

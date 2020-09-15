@@ -1,8 +1,8 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
-import HLSPlayer from "hls.js";
-import DashJS from "dashjs";
 import SubscriptionPayment from "../payment/SubscriptionPayment";
+import {ImageIcon} from "elv-components-js";
+import ViewTrailer from "../video/ViewTrailer";
 
 @inject("rootStore")
 @inject("siteStore")
@@ -13,169 +13,73 @@ class VideoFeature extends React.Component {
 
     this.state = {
       showControls: false,
+      trailer: null
     };
-
-    this.InitializeVideo = this.InitializeVideo.bind(this);
   }
 
   async componentDidMount() {
-    await this.props.siteStore.SetVideoFeature(this.props.title);
+    await this.props.siteStore.LoadAsset(this.props.title.baseLinkPath);
+    const title = this.props.siteStore.assets[this.props.title.versionHash];
+    const trailer = title.trailers.default;
+    await this.props.siteStore.LoadAsset(trailer.baseLinkPath);
+    this.props.siteStore.PlayTrailer(trailer);
   }
 
-  componentWillUnmount() {
-    this.DestroyPlayer();
-  }
-
-  DestroyPlayer() {
-    if(this.player) {
-      this.player.destroy ? this.player.destroy() : this.player.reset();
-    }
-  }
-
-  InitializeVideo(element) {
-    if(!element) { return; }
-
-    this.DestroyPlayer();
-
-    try {
-      element.addEventListener("canplay", () => this.setState({showControls: true}));
-
-      const offering = this.props.title.currentOffering;
-      let playoutOptions = this.props.title.playoutOptions;
-
-      if(!offering || !playoutOptions || !playoutOptions[offering]) { return; }
-
-      playoutOptions = playoutOptions[offering];
-
-      let player;
-      if(this.props.siteStore.dashSupported && playoutOptions.dash) {
-        // DASH
-
-        player = DashJS.MediaPlayer().create();
-
-        const playoutUrl = (playoutOptions.dash.playoutMethods.widevine || playoutOptions.dash.playoutMethods.clear).playoutUrl;
-        if(playoutOptions.dash.playoutMethods.widevine) {
-          const widevineUrl = playoutOptions.dash.playoutMethods.widevine.drms.widevine.licenseServers[0];
-
-          player.setProtectionData({
-            "com.widevine.alpha": {
-              "serverURL": widevineUrl
-            }
-          });
-        }
-
-        player.initialize(element, playoutUrl);
-      } else {
-        // HLS
-
-        // Prefer AES playout
-        const playoutUrl = (playoutOptions.hls.playoutMethods["aes-128"] || playoutOptions.hls.playoutMethods.clear).playoutUrl;
-
-        if(!HLSPlayer.isSupported()) {
-          element.src = playoutUrl;
-          return;
-        }
-
-        const player = new HLSPlayer();
-        player.loadSource(playoutUrl);
-        player.attachMedia(element);
-      }
-
-      player.updateSettings({
-        "streaming": {
-          "abr": {
-            "limitBitrateByPortal": true
-          }
-        }
-      });
-      
-      this.player = player;
-      this.video = element;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  }
-  
   preSubscribe() {
     return <SubscriptionPayment isNav={false} isFeature={true}/>;
   }
 
   afterSubscribe() {
     return (
-      <button onClick={() => this.props.siteStore.PlayTitle(featuredTitle)} className={"btnPlay btnPlay__feature"}>
-        {/* <PlayIcon className="modal__btn--icon" /> */}
-        Watch Now
+      <button onClick={() => this.props.siteStore.PlayTitle(this.props.title)} className={"btnPlay btnPlay__feature"}>
+        WATCH NOW
       </button>
     );
   }
-  render() {
+
+  ShowVideo() {
+    return <ViewTrailer key={`active-title-${this.props.siteStore.activeTrailer.titleId}`} />;
+  }
+  
+  render() {    
     const featuredTitle = this.props.title;
 
-    const titleInfo = featuredTitle.info || {};
-    const synopsis = titleInfo.synopsis;
     const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    const poster = this.props.siteStore.CreateLink(
-      featuredTitle.landscapeUrl || featuredTitle.imageUrl,
+    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    
+    const customLogo = this.props.siteStore.CreateLink(
+      featuredTitle.logoUrl,
       "",
-      { height: Math.max(500, Math.floor(vh)) }
+      { height: Math.max(150, Math.min(Math.floor(vh), Math.floor(vw))) }
     );
-
-
-    const Maybe = (value, render) => value ? render() : null;
-
-    // const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    // const thumbnail = this.props.siteStore.CreateLink(
-    //   featuredTitle.landscapeUrl || featuredTitle.imageUrl,
-    //   "",
-    //   { height: Math.max(150, Math.floor(vh / 3)) }
-    // );
 
     const backgroundStyle = {
       backgroundSize: "cover",
       marginTop: "7rem",
-      // backgroundImage: `url(${thumbnail})`,
-      // opacity: ".1"
-    };
 
+    };
+    
     return (
       <div
         style={backgroundStyle}
         className= "video-feature"
       >
-        <div className={"video-feature__video"}>
-          <video
-            id="background-video"
-            loop
-            autoPlay
-            muted={true}
-            key={`active-title-video-${featuredTitle.titleId}-${featuredTitle.currentOffering}`}
-            ref={this.InitializeVideo}
-            poster={poster}
-            controls={this.state.showControls}
-          />
-        </div>
+        { this.props.siteStore.activeTrailer ? this.ShowVideo() : null}
 
         <div className="video-feature__container">
-          <h1 className="video-feature__title">
-            {featuredTitle.displayTitle}
-          </h1>
+          { customLogo ? <ImageIcon className="video-feature__titleIcon" icon={customLogo} label="logo"/> : <h1 className="video-feature__title"> {featuredTitle.displayTitle} </h1>}
+
           <div className="video-feature__button">
             { this.props.siteStore.boughtSubscription ? this.afterSubscribe() : this.preSubscribe()}
 
             <button onClick={() => this.props.siteStore.SetSingleTitle(featuredTitle)} className="btnDetails btnDetails__featureDetail">
-                View Details
+                VIEW DETAILS
             </button>
           </div>
-
-          {Maybe(
-            synopsis,
-            () => <p className="video-feature__overview">{ synopsis }</p>
-          )}
-
         </div>
 
       </div>
+
     );
   }
 }

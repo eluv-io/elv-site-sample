@@ -16,7 +16,7 @@ class SwiperTitleIcon extends React.Component {
 
   render() {
 
-    //Getting metadata: thumbnail
+    //Getting metadata:
     const title = this.props.title;
 
     const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -41,7 +41,6 @@ class SwiperTitleIcon extends React.Component {
           <h3 className={this.props.isPoster ? "swiper-slide__title hide" : "swiper-slide__title"}>
             { this.props.isEpisode ? `Episode ${this.props.episode + 1}: ${title.displayTitle}` : (this.props.trailers ? `Preview: ${title.displayTitle}` : `${title.displayTitle}`)}
           </h3>
-          {/* <h3 className="swiper-slide__title"> { this.props.isEpisode === true ? `Episode ${this.props.episode + 1}: ${title.displayTitle}` : `${title.displayTitle}`}</h3> */}
         </div>
       </React.Fragment>
     );

@@ -6,8 +6,7 @@ import {HashRouter, Route} from "react-router-dom";
 import * as Stores from "./stores";
 import Site from "./components/Site";
 // import ContentSelector from "./components/ContentSelector";
-import CodeAccess from "./components/CodeAccess";
-import NewCodeAccess from "./components/NewCodeAccess";
+import CodeAccess from "./components/navigation/CodeAccess";
 import styled from "styled-components";
 
 import "swiper/css/swiper.min.css";
@@ -27,7 +26,6 @@ class Routes extends React.Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={NewCodeAccess} />
         <Route exact path="/code/:siteSelectorId" component={CodeAccess} />
 
         <Route
@@ -42,7 +40,7 @@ class Routes extends React.Component {
         />
 
         <Route>
-          <Redirect to="/" />
+          <Redirect to="/code/iq__YfEF1A8sUvMj5WcMCJEDk4aEwND" />
         </Route>
       </Switch>
     );
@@ -54,11 +52,6 @@ class Routes extends React.Component {
 @observer
 class App extends React.Component {
   render() {
-    // background: ${this.props.siteStore.siteCustomization ? this.props.siteStore.siteCustomization.colors.background : 'rgb(17, 17, 17)'};
-    // const backgroundColor = (this.props.siteStore.siteCustomization ? this.props.siteStore.siteCustomization.colors.background : 'rgb(17, 17, 17)');
-    // console.log(backgroundColor);
-
-
     const ContainerApp = styled.div`
       min-height: 100vh;    
       background: ${this.props.siteStore.backgroundColor};

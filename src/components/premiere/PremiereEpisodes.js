@@ -1,7 +1,7 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
 import { Dropdown } from "semantic-ui-react";
-import AsyncComponent from "../AsyncComponent";
+import AsyncComponent from "../video/AsyncComponent";
 import TitleGrid from "../grid/TitleGrid";
 
 @inject("rootStore")

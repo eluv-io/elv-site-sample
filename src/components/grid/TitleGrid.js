@@ -3,8 +3,7 @@ import {inject, observer} from "mobx-react";
 import SwiperTitleIcon from "./SwiperTitleIcon";
 
 
-/// SAME THING AS TITLE GRID BUT WITH DIFFERENT CLASSNAME
-/// TODO: Might get rid of Carousel effect for the Search Grid
+/// Used for search, series' episodes (showcases all titles in mutliple lines)
 
 @inject("siteStore")
 @observer

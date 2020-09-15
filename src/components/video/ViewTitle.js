@@ -2,7 +2,7 @@ import React from "react";
 import HLSPlayer from "hls.js";
 import DashJS from "dashjs";
 import {inject, observer} from "mobx-react";
-import BackButton from "./BackButton";
+import BackButton from "../navigation/BackButton";
 
 @inject("siteStore")
 @observer

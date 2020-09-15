@@ -2,7 +2,7 @@ import React from "react";
 import {inject, observer} from "mobx-react";
 import PremiereTabs from "./PremiereTabs";
 import {ImageIcon} from "elv-components-js";
-import NavigationBar from "../NavigationBar";
+import NavigationBar from "../navigation/NavigationBar";
 import SubscriptionPayment from "../payment/SubscriptionPayment";
 
 @inject("rootStore")
@@ -75,7 +75,6 @@ class ActiveTitle extends React.Component {
 
     const backgroundStyle = {
       backgroundSize: "cover",
-      // backgroundImage: `linear-gradient(to bottom, ${backgroundColor1} 65%, ${backgroundColor2} 70%, ${backgroundColor3} 75%, rgb(17, 17, 17, .7) 80%, rgb(17, 17, 17, .8) 85%, rgb(17, 17, 17, .9) 90%, ${backgroundColor} 100%), url(${thumbnail})`,
       backgroundImage: `linear-gradient(to bottom, ${backgroundColor1} 50%, ${backgroundColor2} 55%, ${backgroundColor3}  60%, ${backgroundColor4} 65%, ${backgroundColor5}  70%, ${backgroundColor6} 80%, ${backgroundColor} 85%), url(${thumbnail})`,
       backgroundPosition: "center"
     };
@@ -91,7 +90,6 @@ class ActiveTitle extends React.Component {
 
         <div style={backgroundStyle} className="active-background" />
         <div className="active-view-container active-view-container__done">
-          {/* <h1 className="active-view-container__heading">{ featuredTitle.displayTitle }</h1> */}
           { customLogo ? <ImageIcon className="active-view-container__logo" icon={customLogo} label="logo"/> : <h1 className="active-view-container__heading"> {featuredTitle.displayTitle} </h1>}
 
           { this.state.isSeries ? null : this.RegularButtons()}

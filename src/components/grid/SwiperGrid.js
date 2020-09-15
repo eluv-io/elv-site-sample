@@ -45,12 +45,6 @@ class SwiperGrid extends React.Component {
     const noTitles = (!this.props.titles || this.props.titles.length === 0);
     if(!this.props.noTitlesMessage && noTitles) { return null; }
 
-    // let RightIcon;
-    // if(this.props.shouldPlay) {
-    //   RightIcon = PlayTitleIcon;
-    // } else {
-    //   RightIcon = SwiperTitleIcon;
-    // }
     return (
       <div className={this.props.trailers ? "trailer-container" : "swiper-container"}>
         <h1 className="swiper-heading">

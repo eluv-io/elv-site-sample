@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import {inject, observer} from "mobx-react";
 import {ImageIcon} from "elv-components-js";
 import {FaSearch} from "react-icons/fa";
-import SubscriptionPayment from "./payment/SubscriptionPayment";
+import SubscriptionPayment from "../payment/SubscriptionPayment";
 import styled from "styled-components";
-import Logo from "../static/images/Logo.png";
+import Logo from "../../static/images/Logo.png";
 
 @inject("rootStore")
 @inject("siteStore")
