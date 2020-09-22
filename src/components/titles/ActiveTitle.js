@@ -329,9 +329,7 @@ class ActiveTitle extends React.Component {
       displayTitle = program.title || displayTitle;
       synopsis = program.description !== undefined ? program.description : synopsis;
     }
-
-    const poster = this.props.siteStore.activeTitle.landscapeUrl || this.props.siteStore.activeTitle.imageUrl;
-
+    
     // Include poster image to pre-load it for details page
     return (
       <div className={`active-title-video-page ${this.state.activeTab === "Video" ? "" : "hidden"}`}>
@@ -340,7 +338,6 @@ class ActiveTitle extends React.Component {
           key={`active-title-video-${title.titleId}-${title.currentOffering}`}
           ref={this.InitializeVideo}
           autoPlay
-          poster={poster}
           controls={this.state.showControls}
         />
         <div className="video-info">
