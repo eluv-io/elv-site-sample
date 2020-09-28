@@ -6,6 +6,7 @@ import Logo from "../../static/images/fox/foxLogo.png";
 import {ImageIcon} from "elv-components-js";
 import background from "../../static/images/livestream/brand-ev.jpg";
 import styled from "styled-components";
+import AsyncComponent from "../AsyncComponent";
 
 import liamE from "../../static/images/livestream/liam-event.png";
 import brandE from "../../static/images/livestream/brand-ev.jpg";
@@ -52,7 +53,7 @@ class Event extends React.Component {
         description = "S3 E22 - Couldn't Mask for Anything More: The Grand Finale!";
         break;
       case "24hours":
-        artist = "Gordon Ramsay's 24 Hours";
+        artist = "24 Hours";
         event = tv24hours;
         description = "S2 E22 - Gordon Ramsay's 24 Hours to Hell and Back";
 
@@ -63,7 +64,7 @@ class Event extends React.Component {
         description = "S18 E16 - Start Me Up";
         break;
       case "cosmos":
-        artist = "Cosmos - Possible Worlds";
+        artist = "Cosmos";
         event = tvcosmos;
         description = "S3 E1 - Ladder to the Stars";
         break;
@@ -73,7 +74,7 @@ class Event extends React.Component {
         description = "NHRA Drag Racing - Gainesville";
         break;
       case "tnf":
-        artist = "Thursday Night Football";
+        artist = "NFL";
         event = tvfootball;
         description = "Denver Broncos vs. NY Jets";
         break;
@@ -95,38 +96,54 @@ class Event extends React.Component {
     `;
 
     return (
-      <div className="event-container">
-        <div className="event-nav">
-          <ImageIcon className="event-nav__container--logo" icon={Logo} label="Eluvio" />
-        </div>
+      <AsyncComponent
+        Load={async () => {
+          await this.props.rootStore.CreateCharge(artist, description);
+        }}
+        render={() => {
+          if(!this.props.rootStore.redirectCB) { return null; }
+          console.log(this.props.rootStore.redirectCB);
 
-        <BackgroundStyleContainer />
+          return (
+            <div className="event-container">
+              <div className="event-nav">
+                <ImageIcon className="event-nav__container--logo" icon={Logo} label="Eluvio" />
+              </div>
+
+              <BackgroundStyleContainer />
 
 
-        <div className="event-container__info">
-          <div className="event-container__info__title">
-            {artist} - Schedule
-          </div>
+              <div className="event-container__info">
+                <div className="event-container__info__title">
+                  {artist} - Schedule
+                </div>
 
-          <div className="event-container__info__schedule">
-            <div className="event-container__info__schedule__post">
-              <h4 className="event-container__info__schedule__post__detail">Sep 28 · 7:00 PM PDT </h4>
+                <div className="event-container__info__schedule">
+                  <div className="event-container__info__schedule__post">
+                    <h4 className="event-container__info__schedule__post__detail">Sep 28 · 7:00 PM PDT </h4>
 
-              <h4 className="event-container__info__schedule__post__detail">{description} </h4>
-              <Link 
-                to={`/payment/${this.props.match.params.artist}`} 
-                >
-                <button type="button" className="btn2 btn2--white btn3 btn3--white" onClick={() => this.props.siteStore.SetArtist(artist, event)}>Buy Ticket</button>
-              </Link>
+                    <h4 className="event-container__info__schedule__post__detail">{description} </h4>
+            
+                    <Link to={{
+                      pathname: `/payment/${this.props.match.params.artist}`,
+                      state: {
+                        url: this.props.rootStore.redirectCB
+                      }
+                    }}>
+                      <button type="button" className="btn2 btn2--white btn3 btn3--white" onClick={() => this.props.siteStore.SetArtist(artist, event)}>Buy Ticket</button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="live-footer">
+                <h3 className="live-footer__title">
+                  Copyright © Eluvio 2020 
+                </h3>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="live-footer">
-          <h3 className="live-footer__title">
-            Copyright © Eluvio 2020 
-          </h3>
-        </div>
-      </div>
+          );
+        }}
+      />
     );
   }
 }

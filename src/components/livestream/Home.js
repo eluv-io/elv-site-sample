@@ -77,7 +77,7 @@ class Home extends React.Component {
             />
             <Card
               name={"24hours"}
-              artist={"Gordon Ramsay's 24 Hours"}
+              artist={"24 Hours"}
               date={"Sep 29 · 5:00 PM PDT"}
               description={"S2 E22 - Gordon Ramsay's 24 Hours to Hell and Back"}
               icon={tv24hours}
@@ -91,7 +91,7 @@ class Home extends React.Component {
             />
             <Card
               name={"cosmos"}
-              artist={"Cosmos - Possible Worlds"}
+              artist={"Cosmos"}
               date={"Oct 4 · 10:00 PM PDT"}
               description={"S3 E1 - Ladder to the Stars"}
               icon={tvcosmos}
@@ -113,7 +113,7 @@ class Home extends React.Component {
             />
             <Card
               name={"tnf"}
-              artist={"Thursday Night Football"}
+              artist={"NFL"}
               date={"Oct 1 · 8:20 PM PDT"}
               description={"Denver Broncos vs. NY Jets"}
               icon={tvfootball}

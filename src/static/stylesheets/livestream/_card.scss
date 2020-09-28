@@ -99,6 +99,20 @@
     top: 180px;
   } 
 }
+.card__heading2 {
+  font-size: 25px;
+  font-weight: 300;
+  text-transform: uppercase;
+  text-align: right;
+  color: #fff;
+  position: absolute;
+  top: 300px;
+  right: 15px;
+  width: 100%;
+  @media only screen and (max-width: 550px) {
+    top: 150px;
+  } 
+}
 .card__heading-span {
   padding: 7px 12px;
   line-height: 180%;

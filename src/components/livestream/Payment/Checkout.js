@@ -10,6 +10,7 @@ import "./global.css";
 // import artist5 from "../../../static/images/livestream/artist5.png";
 // import artist6 from "../../../static/images/livestream/artist6.png";
 
+import AsyncComponent from "../../AsyncComponent";
 
 import tv1 from "../../../static/images/fox/masked-singer.jpg";
 import tv24hours from "../../../static/images/fox/24hours.jpg";
@@ -18,11 +19,10 @@ import tvcosmos from "../../../static/images/fox/cosmos.jpg";
 import tvnhra from "../../../static/images/fox/nhra.jpg";
 import tvfootball from "../../../static/images/fox/footballTNF.jpg";
 
-import CoinbaseCommerceButton from 'react-coinbase-commerce';
-import 'react-coinbase-commerce/dist/coinbase-commerce-button.css';
-
 // import Logo from "../../../static/images/Logo.png";
 import Logo from "../../../static/images/fox/foxLogo.png";
+import CoinbaseCommerceButton from 'react-coinbase-commerce';
+import 'react-coinbase-commerce/dist/coinbase-commerce-button.css';
 
 import {ImageIcon} from "elv-components-js";
 
@@ -78,7 +78,7 @@ function reducer(state, action) {
 }
 
 
-const Checkout = () => {
+const Checkout = (props) => {
   const [state, dispatch] = useReducer(reducer, {
     priceId: "price_1HWA0rKgR5J3zPrLoLl9QIXs",
     basePrice: 999,
@@ -159,6 +159,8 @@ const Checkout = () => {
     }
   }
 
+
+
   return (
     <div className="new-live-container">
       <div className="live-nav">
@@ -207,27 +209,26 @@ const Checkout = () => {
             {/* </div> */}
             {/* <p className="sr-legal-text">Number of copies (max 10)</p> */}
 
-            <button role="link" onClick={handleClick} disabled={state.loading}>
+            <button role="link" onClick={handleClick} disabled={state.loading} className="payment-button">
               {state.loading || !state.price
                 ? "Loading..."
                 : `Buy with Credit Card`}
             </button>
-
-            <button>
+            <button className="payment-button">
               <a className="coinbase buy-with-crypto"
-                href="https://commerce.coinbase.com/checkout/d063763b-8833-4b12-b278-303b26da4192">
+                href={props.location.state.url}>
                 Buy with Crypto
               </a>
-              <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807">
-              </script>
             </button>
-            {/* <CoinbaseCommerceButton checkoutId={'d063763b-8833-4b12-b278-303b26da4192'}/> */}
+
             {/* <div className="sr-field-error">{state.error?.message}</div> */}
           </section>
         </div>
       </div>
     </div>
   );
+    
+  
 };
 
 export default Checkout;
