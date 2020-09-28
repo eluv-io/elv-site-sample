@@ -36,7 +36,7 @@
   }
 
   &--logo { 
-    height: 4rem;
+    height: 3.5rem;
     margin-left: 12.5vw;
     width: auto;
     z-index: 999;
@@ -108,7 +108,7 @@
       display: inline-block;
       font-size: 5.5em;
       font-weight: 700;
-      letter-spacing: -0.01em;
+      letter-spacing: .023em;
       line-height: 1;
       text-align: left;
       width: 700px;
@@ -191,7 +191,7 @@
     // position: relative;
     border-radius: 7.5px;
     height: 360px;
-    width: 480px;
+    width: 520px;
     margin-left: 5rem;
     // margin-right: 12.5vw;
 
@@ -227,7 +227,7 @@
     left: 0;
     top: 0;
     height: 360px;
-    width: 480px;
+    width: 520px;
     @media only screen and (max-width: 1640px) {
       height: 320px;
       width: 426.7px;
@@ -248,7 +248,7 @@
     background-size: cover;
     border-radius: 10px;
     height: 360px !important;
-    width: 480px !important;
+    width: 520px !important;
 
     @media only screen and (max-width: 1640px) {
       height: 320px !important;

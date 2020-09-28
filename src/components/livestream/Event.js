@@ -1,6 +1,8 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
-import Logo from "../../static/images/Logo.png";
+// import Logo from "../../static/images/Logo.png";
+import Logo from "../../static/images/fox/foxLogo.png";
+
 import {ImageIcon} from "elv-components-js";
 import background from "../../static/images/livestream/brand-ev.jpg";
 import styled from "styled-components";
@@ -12,6 +14,13 @@ import kotaE from "../../static/images/livestream/kota-ev.jpg";
 import oriE from "../../static/images/livestream/ori-ev.jpeg";
 import walkE from "../../static/images/livestream/walk-new.jpg";
 
+import tv1 from "../../static/images/fox/masked-singer.jpg";
+import tvmasked from "../../static/images/fox/masked.jpg";
+import tv24hours from "../../static/images/fox/24hours.jpg";
+import tvfamily from "../../static/images/fox/familyposter.jpg";
+import tvcosmos from "../../static/images/fox/cosmos.jpg";
+import tvbasketball from "../../static/images/fox/basketball.jpg";
+import tvfootball from "../../static/images/fox/footballTNF.jpg";
 import {
   Link
 } from "react-router-dom";
@@ -31,42 +40,52 @@ class Event extends React.Component {
   }
 
   render() {
-    let artist ;
+    let artist;
     let event;
+    let description;
+
     switch(this.props.match.params.artist) {
-      case "liampayne":
-        artist = "Liam Payne";
-        event = liamE;
+      case "maskedsinger":
+        artist = "The Masked Singer";
+        event = tv1;
+        description = "S3 E22 - Couldn't Mask for Anything More: The Grand Finale!";
         break;
-      case "brandicarlile":
-        artist = "Brandi Carlile";
-        event = brandE;
+      case "24hours":
+        artist = "Gordon Ramsay's 24 Hours";
+        event = tv24hours;
+        description = "S2 E22 - Gordon Ramsay's 24 Hours to Hell and Back";
+
         break;
-      case "kotathefriend":
-        artist = "Kota the Friend";
-        event = kotaE;
+      case "family":
+        artist = "Family Guy";
+        event = tvfamily;
+        description = "S18 E16 - Start Me Up";
         break;
-      case "orianthi":
-        artist = "Orianthi";
-        event = oriE;
+      case "cosmos":
+        artist = "Cosmos - Possible Worlds";
+        event = tvcosmos;
+        description = "S3 E1 - Ladder to the Stars";
         break;
-      case "walkofftheearth":
-        artist = "Walk off the Earth";
-        event = walkE;
+      case "nbaplayoffs":
+        artist = "NBA Playoffs";
+        event = tvbasketball;
+        description = "LA Lakers vs. Miami Heat";
         break;
-      case "perfumegenius":
-        artist = "Perfume Genius";
-        event = perfE;
+      case "tnf":
+        artist = "Thursday Night Football";
+        event = tvfootball;
+        description = "Denver Broncos vs. NY Jets";
         break;
       default:
-        artist = "Artist";
-        event = background;
+        artist = "TV";
+        event = tv1;
+        description = "Live TV";
     }
 
     const BackgroundStyleContainer = styled.div`
       background-size: cover;
       background-image: url(${event});
-      height: 87.5vh;
+      height: 85vh;
       background-position: top;
       @media only screen and (max-width: 750px) {
         height: 65vh;
@@ -85,40 +104,18 @@ class Event extends React.Component {
 
         <div className="event-container__info">
           <div className="event-container__info__title">
-            {artist} Schedule
+            {artist} - Schedule
           </div>
 
           <div className="event-container__info__schedule">
             <div className="event-container__info__schedule__post">
-              <h4 className="event-container__info__schedule__post__detail">Sep 6 · 7:00 PM PDT </h4>
+              <h4 className="event-container__info__schedule__post__detail">Sep 28 · 7:00 PM PDT </h4>
 
-              <h4 className="event-container__info__schedule__post__detail">Live At Bill Graham in San Francisco </h4>
+              <h4 className="event-container__info__schedule__post__detail">{description} </h4>
               <Link 
                 to={`/payment/${this.props.match.params.artist}`} 
                 >
-                <button type="button" className="btn2 btn2--white btn3 btn3--white" onClick={() => this.props.siteStore.SetArtist(artist, event)}>Buy Tickets</button>
-              </Link>
-            </div>
-
-            <div className="event-container__info__schedule__post">
-              <h4 className="event-container__info__schedule__post__detail">Sep 7 · 9:00 PM PDT </h4>
-
-              <h4 className="event-container__info__schedule__post__detail">Live At Bill Graham in San Francisco </h4>
-              <Link 
-                to={`/payment/${this.props.match.params.artist}`} 
-                >
-                <button type="button" className="btn2 btn2--white btn3 btn3--white" onClick={() => this.props.siteStore.SetArtist(artist, event)}>Buy Tickets</button>
-              </Link>
-            </div>
-
-            <div className="event-container__info__schedule__post">
-              <h4 className="event-container__info__schedule__post__detail">Sep 9 · 9:00 PM PDT </h4>
-
-              <h4 className="event-container__info__schedule__post__detail">Live At Red Rocks Amp. in Colorado </h4>
-              <Link 
-                to={`/payment/${this.props.match.params.artist}`} 
-                >
-                <button type="button" className="btn2 btn2--white btn3 btn3--white" onClick={() => this.props.siteStore.SetArtist(artist, event)}>Buy Tickets</button>
+                <button type="button" className="btn2 btn2--white btn3 btn3--white" onClick={() => this.props.siteStore.SetArtist(artist, event)}>Buy Ticket</button>
               </Link>
             </div>
           </div>
@@ -128,7 +125,6 @@ class Event extends React.Component {
             Copyright © Eluvio 2020 
           </h3>
         </div>
-
       </div>
     );
   }

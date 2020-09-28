@@ -32,7 +32,7 @@ class LiveChat extends React.Component {
       user,
     );
 
-    let channel = this.props.rootStore.chatClient.channel("livestream", "eluvio", {
+    let channel = this.props.rootStore.chatClient.channel("livestream", "eluvio-fox", {
       name: "The Masked Singer",
     });
 

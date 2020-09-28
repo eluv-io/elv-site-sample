@@ -3,13 +3,25 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import "./normalize.css";
 import "./global.css";
-import artist1 from "../../../static/images/livestream/artist1.png";
-import artist2 from "../../../static/images/livestream/artist2.png";
-import artist3 from "../../../static/images/livestream/artist3.png";
-import artist4 from "../../../static/images/livestream/artist4.png";
-import artist5 from "../../../static/images/livestream/artist5.png";
-import artist6 from "../../../static/images/livestream/artist6.png";
-import Logo from "../../../static/images/Logo.png";
+// import artist1 from "../../../static/images/livestream/artist1.png";
+// import artist2 from "../../../static/images/livestream/artist2.png";
+// import artist3 from "../../../static/images/livestream/artist3.png";
+// import artist4 from "../../../static/images/livestream/artist4.png";
+// import artist5 from "../../../static/images/livestream/artist5.png";
+// import artist6 from "../../../static/images/livestream/artist6.png";
+
+
+import tv1 from "../../../static/images/fox/masked-singer.jpg";
+import tv24hours from "../../../static/images/fox/24hours.jpg";
+import tvfamily from "../../../static/images/fox/familyposter.jpg";
+import tvcosmos from "../../../static/images/fox/cosmos.jpg";
+import tvbasketball from "../../../static/images/fox/basketball.jpg";
+import tvfootball from "../../../static/images/fox/footballTNF.jpg";
+
+
+// import Logo from "../../../static/images/Logo.png";
+import Logo from "../../../static/images/fox/foxLogo.png";
+
 import {ImageIcon} from "elv-components-js";
 
 const stripePromise = loadStripe("pk_test_51Gy1tWKgR5J3zPrLdO0DgqBKqES5Kmfe7qlKYspFxoiZbGizeQIqh8uXfYqa45wIZGfChMn2R3tLhEwonIsWZHok00k4BiqN3N");
@@ -66,7 +78,7 @@ function reducer(state, action) {
 
 const Checkout = () => {
   const [state, dispatch] = useReducer(reducer, {
-    priceId: "price_1HPbPYKgR5J3zPrLcOd9Vz2u",
+    priceId: "price_1HWA0rKgR5J3zPrLoLl9QIXs",
     basePrice: 999,
     currency: "usd",
     quantity: 1,
@@ -87,8 +99,8 @@ const Checkout = () => {
     const { error } = await stripe.redirectToCheckout({
       mode: "payment",
       lineItems: [{ price: state.priceId, quantity: state.quantity }],
-      successUrl: `https://core.test.contentfabric.io/prod/site-sample-live/#/success`,
-      cancelUrl: `https://core.test.contentfabric.io/prod/site-sample-live/#/`,
+      successUrl: `https://core.test.contentfabric.io/prod/site-sample-live-fox/#/success`,
+      cancelUrl: `https://core.test.contentfabric.io/prod/site-sample-live-fox/#/`,
       // successUrl: `${window.location.origin}/#/success`,
       // cancelUrl: `${window.location.origin}/#/`,
     });
@@ -103,46 +115,45 @@ const Checkout = () => {
 
   function renderSwitch(param) {
     switch(param) {
-      case "liampayne":
-        return "Liam Payne";
-
-      case "brandicarlile":
-        return "Brandi Carlile";
-
-      case "kotathefriend":
-        return "Kota the Friend";
-      case "orianthi":
-        return "Orianthi";
-
-      case "walkofftheearth":
-        return "Walk off the Earth";
-
-      case "perfumegenius":
-        return "Perfume Genius";
+      case "maskedsinger":
+        return "The Masked Singer";
+        
+      case "24hours":
+        return "Gordon Ramsay's 24 Hours";
+        
+      case "family":
+        return "Family Guy";
+        
+      case "cosmos":
+        return "Cosmos - Possible Worlds";
+        
+      case "nbaplayoffs":
+        return "NBA Playoffs";
+        
+      case "tnf":
+        return "Thursday Night Football";
+        
       default:
-        return "Artist";
+        return "TV";
+        
     }
   }
   function renderSwitchPhoto(param) {
     switch(param) {
-      case "liampayne":
-        return artist1;
-
-      case "brandicarlile":
-        return artist2;
-
-      case "kotathefriend":
-        return artist4;
-      case "orianthi":
-        return artist5;
-
-      case "walkofftheearth":
-        return artist6;
-
-      case "perfumegenius":
-        return artist3;
+      case "maskedsinger":
+        return tv1;
+      case "24hours":
+        return tv24hours;
+      case "family":
+        return tvfamily;
+      case "cosmos":
+        return tvcosmos;
+      case "nbaplayoffs":
+        return tvbasketball;
+      case "tnf":
+        return tvfootball;
       default:
-        return "Artist";
+        return tv1;
     }
   }
 
@@ -158,7 +169,7 @@ const Checkout = () => {
           <section className="container">
             <div>
               <h1>Purchase a Ticket</h1>
-              <h4>{renderSwitch(window.location.href.substring(window.location.href.lastIndexOf('/') + 1))} Live At Bill Graham </h4>
+              <h4>{renderSwitch(window.location.href.substring(window.location.href.lastIndexOf('/') + 1))}  </h4>
               <div className="pasha-image">
                 <img
                   alt="Random asset from Picsum"

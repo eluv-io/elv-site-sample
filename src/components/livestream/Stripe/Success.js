@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./normalize.css";
 import "./global.css";
-import Logo from "../../../static/images/Logo.png";
+// import Logo from "../../../static/images/Logo.png";
+import Logo from "../../../static/images/fox/foxLogo.png";
+
 // import background from "../../../static/images/livestream/artist1.png";
 import {ImageIcon} from "elv-components-js";
 import {inject, observer} from "mobx-react";

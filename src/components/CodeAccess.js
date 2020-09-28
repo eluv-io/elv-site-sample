@@ -7,7 +7,7 @@ import default_background from "../static/images/codeAccess/concert.jpg";
 // import default_background from "../static/images/codeAccess/bill-ted-background.jpg";
 
 import {ImageIcon} from "elv-components-js";
-import Logo from "../static/images/Logo-Small.png";
+import Logo from "../static/images/fox/foxBlack.png";
 
 @inject("siteStore")
 @inject("rootStore")

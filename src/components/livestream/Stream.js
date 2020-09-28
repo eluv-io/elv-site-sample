@@ -1,6 +1,6 @@
 import React from "react";
 import {inject, observer, Provider} from "mobx-react";
-import Logo from "../../static/images/Logo.png";
+import Logo from "../../static/images/fox/foxLogo.png";
 import {ImageIcon} from "elv-components-js";
 import LiveChat from "./LiveChat";
 import ViewStream from "./ViewStream";
@@ -44,12 +44,11 @@ class Stream extends React.Component {
                 
                 <div className="stream-container__streamBox--info">
                   <h2 className="stream-container__streamBox--info__subtitle">
-                    Liam Payne
-                    {/* Fox Broadcasting Company */}
+                    {/* Liam Payne */}
+                    Fox Broadcasting Company
                   </h2>
                   <h1 className="stream-container__streamBox--info__title">
-                    The LP Show: Act 2
-                    {/* The Masked Singer */}
+                    The Masked Singer
                   </h1>
                 </div> 
               </div>

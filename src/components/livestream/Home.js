@@ -1,15 +1,17 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
-import Logo from "../../static/images/Logo.png";
+import Logo from "../../static/images/fox/foxLogo.png";
 import {ImageIcon} from "elv-components-js";
 import Card from "./Card";
-import artist1 from "../../static/images/livestream/artist1.png";
-import artist2 from "../../static/images/livestream/artist2.png";
-import artist3 from "../../static/images/livestream/artist3.png";
-import artist4 from "../../static/images/livestream/artist4.png";
-import artist5 from "../../static/images/livestream/artist5.png";
-import artist6 from "../../static/images/livestream/artist6.png";
 
+import tv1 from "../../static/images/fox/masked-singer.jpg";
+import tvmasked from "../../static/images/fox/masked.jpg";
+import tv24hours from "../../static/images/fox/24hours.jpg";
+import tvfamily from "../../static/images/fox/family.jpg";
+import tvcosmos from "../../static/images/fox/cosmos.jpg";
+
+import tvbasketball from "../../static/images/fox/basketball.jpg";
+import tvfootball from "../../static/images/fox/footballTNF.jpg";
 import { Link } from "react-router-dom";
 
 @inject("rootStore")
@@ -41,19 +43,20 @@ class Home extends React.Component {
         <div className="live-hero">
           <div className="live-hero__container">
             <h1 className="live-hero__container__title">
-                Live Concerts From your home. 
+                {/* Live Concerts From your home. */}
+                All Your Live TV In One Place.
             </h1>
             <h2 className="live-hero__container__subtitle">
-                Purchase livestream tickets for your favorite artists from the comfort of your home.
+                Purchase livestream tickets for your favorite FOX TV Shows and Live Sports.
             </h2>
           </div>
           
           <div className="live-hero__cardMain">
             <div className="live-hero__cardMain__side">
-              <ImageIcon className="live-hero__picture" icon={artist1} label="artist" />
-              <h4 className="live-hero__heading">
-                <span className="live-hero__heading-span card__heading-span--4">Liam Payne</span>
-              </h4>
+              <ImageIcon className="live-hero__picture" icon={tv1} label="artist" />
+              {/* <h4 className="live-hero__heading">
+                <span className="live-hero__heading-span card__heading-span--4">The Masked Singer</span>
+              </h4> */}
             </div>
           </div>
         </div>
@@ -61,51 +64,59 @@ class Home extends React.Component {
         {/* Content Selection */}
         <div className="live-content">
           <div className="live-content__title">
-            Upcoming Livestreams
+            Live TV
           </div>
 
           <div className="live-content__container">
             <Card
-              name={"liampayne"}
-              artist={"Liam Payne"}
-              date={"Sep 8 · 7:00 PM PDT"}
-              description={"Liam Payne Live At Bill Graham in San Francisco"}
-              icon={artist1}
+              name={"maskedsinger"}
+              artist={"The Masked Singer"}
+              date={"Sep 28 · 7:00 PM PDT"}
+              description={"S3 E22 - Couldn't Mask for Anything More: The Grand Finale!"}
+              icon={tvmasked}
             />
             <Card
-              name={"brandicarlile"}
-              artist={"Brandi Carlile"}
-              date={"Sep 12 · 4:00 PM PDT"}
-              description={"Brandi Carlile Live At The Cornerstone in Berkeley"}
-              icon={artist2}
+              name={"24hours"}
+              artist={"Gordon Ramsay's 24 Hours"}
+              date={"Sep 29 · 5:00 PM PDT"}
+              description={"S2 E22 - Gordon Ramsay's 24 Hours to Hell and Back"}
+              icon={tv24hours}
             />
             <Card
-              name={"perfumegenius"}
-              artist={"Perfume Genius"}
-              date={"Sep 24 · 7:00 PM PDT"}
-              description={"Perfume Genius Live At Harvelle's in Chicago"}
-              icon={artist3}
+              name={"family"}
+              artist={"Family Guy"}
+              date={"Sep 30 · 7:30 PM PDT"}
+              description={"S18 E16 - Start Me Up"}
+              icon={tvfamily}
             />
             <Card
-              name={"kotathefriend"}
-              artist={"Kota the Friend"}
-              date={"Sep 4 · 10:00 PM PDT"}
-              description={"Kota the Friend Live At King Fish in Oakland"}
-              icon={artist4}
+              name={"cosmos"}
+              artist={"Cosmos - Possible Worlds"}
+              date={"Oct 4 · 10:00 PM PDT"}
+              description={"S3 E1 - Ladder to the Stars"}
+              icon={tvcosmos}
+            />
+          </div>
+        </div>
+        <div className="live-content">
+          <div className="live-content__title">
+            Live Sports
+          </div>
+
+          <div className="live-content__container">
+            <Card
+              name={"nbaplayoffs"}
+              artist={"NBA Playoffs"}
+              date={"Sep 30 · 7:30 PM PDT"}
+              description={"LA Lakers vs. Miami Heat"}
+              icon={tvbasketball}
             />
             <Card
-              name={"orianthi"}
-              artist={"Orianthi"}
-              date={"Sep 19 · 6:00 PM PDT"}
-              description={"Orianthi Live At The Whisky in Hollywood"}
-              icon={artist5}
-            />
-            <Card
-              name={"walkofftheearth"}
-              artist={"Walk off the Earth"}
-              date={"Sep 23 · 9:00 PM PDT"}
-              description={"Walk off the Earth Live At The Fillmore in San Francisco"}
-              icon={artist6}
+              name={"tnf"}
+              artist={"Thursday Night Football"}
+              date={"Oct 1 · 8:20 PM PDT"}
+              description={"Denver Broncos vs. NY Jets"}
+              icon={tvfootball}
             />
           </div>
         </div>

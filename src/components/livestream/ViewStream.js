@@ -3,6 +3,7 @@ import HLSPlayer from "hls.js";
 import DashJS from "dashjs";
 import {inject, observer} from "mobx-react";
 import poster from "../../static/images/livestream/masked2.jpg";
+import tv1 from "../../static/images/fox/masked-singer.jpg";
 
 @inject("siteStore")
 @observer
@@ -100,7 +101,7 @@ class ViewStream extends React.Component {
         key={`active-title-video-${title.titleId}-${title.currentOffering}`}
         ref={this.InitializeVideo}
         autoPlay
-        poster={poster}
+        poster={tv1}
         controls={this.state.showControls}
         className={"stream-container__streamBox--video"}
       />
