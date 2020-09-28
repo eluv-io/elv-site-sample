@@ -19,7 +19,8 @@ import tvmasked from "../../static/images/fox/masked.jpg";
 import tv24hours from "../../static/images/fox/24hours.jpg";
 import tvfamily from "../../static/images/fox/familyposter.jpg";
 import tvcosmos from "../../static/images/fox/cosmos.jpg";
-import tvbasketball from "../../static/images/fox/basketball.jpg";
+import tvnhra from "../../static/images/fox/nhra.jpg";
+
 import tvfootball from "../../static/images/fox/footballTNF.jpg";
 import {
   Link
@@ -66,10 +67,10 @@ class Event extends React.Component {
         event = tvcosmos;
         description = "S3 E1 - Ladder to the Stars";
         break;
-      case "nbaplayoffs":
-        artist = "NBA Playoffs";
-        event = tvbasketball;
-        description = "LA Lakers vs. Miami Heat";
+      case "nhra":
+        artist = "NHRA Drag Racing";
+        event = tvnhra;
+        description = "NHRA Drag Racing - Gainesville";
         break;
       case "tnf":
         artist = "Thursday Night Football";
@@ -85,7 +86,7 @@ class Event extends React.Component {
     const BackgroundStyleContainer = styled.div`
       background-size: cover;
       background-image: url(${event});
-      height: 85vh;
+      height: 83.5vh;
       background-position: top;
       @media only screen and (max-width: 750px) {
         height: 65vh;

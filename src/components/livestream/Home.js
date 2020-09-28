@@ -10,7 +10,7 @@ import tv24hours from "../../static/images/fox/24hours.jpg";
 import tvfamily from "../../static/images/fox/family.jpg";
 import tvcosmos from "../../static/images/fox/cosmos.jpg";
 
-import tvbasketball from "../../static/images/fox/basketball.jpg";
+import tvnhra from "../../static/images/fox/nhra.jpg";
 import tvfootball from "../../static/images/fox/footballTNF.jpg";
 import { Link } from "react-router-dom";
 
@@ -105,11 +105,11 @@ class Home extends React.Component {
 
           <div className="live-content__container">
             <Card
-              name={"nbaplayoffs"}
-              artist={"NBA Playoffs"}
+              name={"nhra"}
+              artist={"NHRA Drag Racing"}
               date={"Sep 30 · 7:30 PM PDT"}
-              description={"LA Lakers vs. Miami Heat"}
-              icon={tvbasketball}
+              description={"NHRA Drag Racing - Gainesville"}
+              icon={tvnhra}
             />
             <Card
               name={"tnf"}

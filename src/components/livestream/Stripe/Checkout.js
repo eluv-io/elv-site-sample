@@ -15,9 +15,11 @@ import tv1 from "../../../static/images/fox/masked-singer.jpg";
 import tv24hours from "../../../static/images/fox/24hours.jpg";
 import tvfamily from "../../../static/images/fox/familyposter.jpg";
 import tvcosmos from "../../../static/images/fox/cosmos.jpg";
-import tvbasketball from "../../../static/images/fox/basketball.jpg";
+import tvnhra from "../../../static/images/fox/nhra.jpg";
 import tvfootball from "../../../static/images/fox/footballTNF.jpg";
 
+import CoinbaseCommerceButton from 'react-coinbase-commerce';
+import 'react-coinbase-commerce/dist/coinbase-commerce-button.css';
 
 // import Logo from "../../../static/images/Logo.png";
 import Logo from "../../../static/images/fox/foxLogo.png";
@@ -127,8 +129,8 @@ const Checkout = () => {
       case "cosmos":
         return "Cosmos - Possible Worlds";
         
-      case "nbaplayoffs":
-        return "NBA Playoffs";
+      case "nhra":
+        return "NHRA Drag Racing";
         
       case "tnf":
         return "Thursday Night Football";
@@ -148,8 +150,8 @@ const Checkout = () => {
         return tvfamily;
       case "cosmos":
         return tvcosmos;
-      case "nbaplayoffs":
-        return tvbasketball;
+      case "nhra":
+        return tvnhra;
       case "tnf":
         return tvfootball;
       default:
@@ -179,7 +181,7 @@ const Checkout = () => {
                 />
               </div>
             </div>
-            <div className="quantity-setter">
+            {/* <div className="quantity-setter"> */}
               {/* <button
                 className="increment-btn"
                 disabled={state.quantity === 1}
@@ -202,14 +204,24 @@ const Checkout = () => {
               >
                 +
               </button> */}
-            </div>
+            {/* </div> */}
             {/* <p className="sr-legal-text">Number of copies (max 10)</p> */}
 
             <button role="link" onClick={handleClick} disabled={state.loading}>
               {state.loading || !state.price
                 ? "Loading..."
-                : `Buy for ${state.price}`}
+                : `Buy with Credit Card`}
             </button>
+
+            <button>
+              <a className="coinbase buy-with-crypto"
+                href="https://commerce.coinbase.com/checkout/d063763b-8833-4b12-b278-303b26da4192">
+                Buy with Crypto
+              </a>
+              <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807">
+              </script>
+            </button>
+            {/* <CoinbaseCommerceButton checkoutId={'d063763b-8833-4b12-b278-303b26da4192'}/> */}
             {/* <div className="sr-field-error">{state.error?.message}</div> */}
           </section>
         </div>
