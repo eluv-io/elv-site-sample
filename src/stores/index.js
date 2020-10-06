@@ -113,7 +113,7 @@ class RootStore {
 
       this.email = email;
       this.name = name;
-      this.chatClient = new StreamChat('rxv86av88hv7');
+      this.chatClient = new StreamChat('vwju6nnu5dmh');
       this.chatID = yield this.chatClient.devToken(this.name);
 
       let siteId = "iq__uwWvF1Wy9EeqWXiRU9bR3zRSJe1";
