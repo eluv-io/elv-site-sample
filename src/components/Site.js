@@ -1,16 +1,14 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
+import {withRouter,Redirect} from "react-router";
+
 import SwiperGrid from "./grid/SwiperGrid";
-import ViewTitle from "./video/ViewTitle";
 import TitleGrid from "./grid/TitleGrid";
-import {Redirect, withRouter} from "react-router";
-import AsyncComponent from "./video/AsyncComponent";
-import MoviePremiere from "./premiere/MoviePremiere";
-import ActiveTitle from "./premiere/ActiveTitle";
 import HeroGrid from "./hero/HeroGrid";
 import BoxFeature from "./hero/BoxFeature";
 import NewVideoFeature from "./hero/VideoFeature";
 import NavigationBar from "./navigation/NavigationBar";
+import AsyncComponent from "./navigation/AsyncComponent";
 
 const FormatName = (name) => {
   return (name || "")
@@ -173,22 +171,13 @@ class Site extends React.Component {
     return arrangement.map((entry, i) => this.ArrangementEntry(entry, i));
   }
 
-  ShowVideo() {
-    return <ViewTitle key={`active-title-${this.props.siteStore.activeTitle.titleId}`} />;
-  }
-
-  ShowPremiere() {
-    const siteCustomization = this.props.siteStore.siteCustomization || {};
-    this.props.siteStore.SetBackgroundColor(siteCustomization.colors.background);
-    this.props.siteStore.SetPrimaryFontColor(siteCustomization.colors.primary_text);
-
-    return <MoviePremiere title={this.props.siteStore.premiere.title} />;
-  }
-
   render() {
-    if(!this.props.rootStore.client || (this.props.match.params.siteSelectorId && !this.props.rootStore.accessCode)) {
-      return <Redirect to={`/code/${this.props.match.params.siteSelectorId}`} />;
+    if(!this.props.rootStore.client || (!this.props.rootStore.accessCode)) {
+      return <Redirect to={`/code/iq__YfEF1A8sUvMj5WcMCJEDk4aEwND`} />;
     }
+    // if(!this.props.rootStore.client || !this.props.siteStore.siteInfo) {
+    //   return null;
+    // }
 
     return (
       <AsyncComponent
@@ -198,20 +187,18 @@ class Site extends React.Component {
 
           return (
             <div className="container">
-              {/* If there's an activeTitle (playing video full screen), get rid of Nav Bar.  */}
-
-              { this.props.siteStore.activeTitle ? null : <NavigationBar />}
-
-              {/* If there's an activeTitle (playing video full screen), play the title. 
-              If no activeTitle, check if there's a singleTitle (displaying one title) and show that.
-              If no singleTitle, check if it's a premiere and show that. 
-              If no singleTitle or premiere, show Content (Main Sample Site Page).  */}
-              
-              { this.props.siteStore.activeTitle ? this.ShowVideo() : this.props.siteStore.singleTitle ? <ActiveTitle /> : (this.props.siteStore.premiere ? this.ShowPremiere() : this.Content())}
+              <NavigationBar />
+              { this.Content() }
+              <div className="live-footer">
+                <h3 className="live-footer__title">
+                  Copyright © Eluvio 2020 
+                </h3>
+              </div>
             </div>
           );
         }}
       />
+      
     );
   }
 }

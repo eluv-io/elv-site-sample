@@ -3,6 +3,16 @@ import {inject, observer} from "mobx-react";
 import styled from "styled-components";
 import SubscriptionPayment from "../payment/SubscriptionPayment";
 import {ImageIcon} from "elv-components-js";
+import {
+  Link
+} from "react-router-dom";
+
+const FormatName = (name) => {
+  return (name || "")
+    .split(/[_, \s]/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 @inject("rootStore")
 @inject("siteStore")
@@ -15,9 +25,11 @@ class HeroView extends React.Component {
 
   afterSubscribe() {
     return (
-      <button onClick={() => this.props.siteStore.PlayTitle(this.props.title)} className="btnPlay btnPlay__heroPlay">
-        Watch Movie
-      </button>
+      <Link to={`/${this.props.siteStore.siteParams.objectId}/play/${FormatName(this.props.title.displayTitle)}`}>
+        <button onClick={() => this.props.siteStore.PlayTitle(this.props.title)} className="btnPlay btnPlay__heroPlay">
+          Watch Movie
+        </button>
+      </Link>
     );
   }
 
@@ -49,10 +61,11 @@ class HeroView extends React.Component {
     const BackgroundStyleContainer = styled.div`
       background-size: cover;
       background-image: linear-gradient(to bottom, ${backgroundColor1} 60%, ${backgroundColor2} 65%, ${backgroundColor3} 70%, ${backgroundColor4} 75%, ${backgroundColor5} 80%, ${backgroundColor6} 85%, ${backgroundColor} 90%), url(${thumbnail});
-      height: 100vh;
+      height: 90vh;
       background-position: center;
       }
     `;
+
 
     return (
       <div className="hero-grid-view-container">
@@ -60,9 +73,11 @@ class HeroView extends React.Component {
         { customLogo ? <ImageIcon className="hero-grid-view-container__logo" icon={customLogo} label="logo"/> : <h1 className="hero-grid-view-container__heading-hero">{ featuredTitle.displayTitle }</h1>}
         <div className="hero-grid-view-container__button">            
           { this.props.siteStore.boughtSubscription ? this.afterSubscribe() : this.preSubscribe()}
-          <button onClick={() => this.props.siteStore.SetSingleTitle(featuredTitle)} className="btnDetails btnDetails__heroDetail">
-            View Details
-          </button>
+          <Link to={`/${this.props.siteStore.siteParams.objectId}/overview/${FormatName(featuredTitle.displayTitle)}`}>
+            <button onClick={() => this.props.siteStore.SetSingleTitle(featuredTitle)} className="btnDetails btnDetails__heroDetail">
+              View Details
+            </button>
+          </Link>
         </div>
       </div>
     );

@@ -3,6 +3,10 @@ import {inject, observer} from "mobx-react";
 import {ImageIcon} from "elv-components-js";
 import CloseIcon from "../../static/icons/x.svg";
 
+import {
+  Link
+} from "react-router-dom";
+
 @inject("siteStore")
 @observer
 class BackButton extends React.Component {
@@ -21,13 +25,15 @@ class BackButton extends React.Component {
     }
 
     return (
-      <ImageIcon
-        key={`back-icon-${backText}`}
-        className={backClass}
-        title={backText}
-        icon={backIcon}
-        onClick={backAction}
-      />
+      <Link to={`/${this.props.siteStore.siteParams.objectId}`}>
+        <ImageIcon
+          key={`back-icon-${backText}`}
+          className={backClass}
+          title={backText}
+          icon={backIcon}
+          onClick={backAction}
+        />
+      </Link>
     );
   }
 

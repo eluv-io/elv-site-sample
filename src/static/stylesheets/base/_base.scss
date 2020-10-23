@@ -63,7 +63,8 @@ $bp-tiny: 21.875em;   // 350px;
 .container {
   display: flex;
   flex-direction: column;
-  margin: 0 4vw;
+  margin: 0 10vw;
+  // background-color: white;
 }
 
 .error-message {

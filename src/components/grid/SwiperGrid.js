@@ -9,9 +9,9 @@ class SwiperGrid extends React.Component {
 
   componentDidMount(){
     this.swiper = new Swiper(".swiper-container", {
-      slidesPerView: 6,
+      slidesPerView: 5,
       spaceBetween: 10,
-      slidesPerGroup: 6,
+      slidesPerGroup: 5,
       navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",

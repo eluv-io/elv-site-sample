@@ -5,15 +5,16 @@ import {Redirect, Switch, withRouter} from "react-router";
 import {HashRouter, Route} from "react-router-dom";
 import * as Stores from "./stores";
 import Site from "./components/Site";
-// import ContentSelector from "./components/ContentSelector";
+import OverviewPage from "./components/overview/OverviewPage";
+import VideoPage from "./components/video/ViewTitle";
 import CodeAccess from "./components/navigation/CodeAccess";
 import styled from "styled-components";
-
 import "swiper/css/swiper.min.css";
 import "./static/stylesheets/main.scss";
 
 
 @inject("rootStore")
+@inject("siteStore")
 @observer
 @withRouter
 class Routes extends React.Component {
@@ -31,13 +32,12 @@ class Routes extends React.Component {
         <Route
           exact
           path={[
-            "/code/:siteSelectorId/:siteId",
-            "/preview/:siteId",
-            "/preview/:siteId/:writeToken",
-            "/:siteId",
+            "/:siteId"
           ]}
           component={Site}
         />
+        <Route exact path="/:siteId/overview/:titleID" component={OverviewPage} />
+        <Route exact path="/:siteId/play/:titleID" component={VideoPage} />
 
         <Route>
           <Redirect to="/code/iq__YfEF1A8sUvMj5WcMCJEDk4aEwND" />
@@ -46,6 +46,59 @@ class Routes extends React.Component {
     );
   }
 }
+
+// @inject("rootStore")
+// @inject("siteStore")
+// @observer
+// @withRouter
+// class Routes extends React.Component {
+//   componentDidUpdate(prevProps) {
+//     if(this.props.location.pathname !== prevProps.location.pathname) {
+//       this.props.rootStore.UpdateRoute(this.props.location.pathname);
+//     }
+//   }
+
+//   render() {
+//     return (
+//       <AsyncComponent
+//         Load={
+//           async () => {
+//             await this.props.siteStore.LoadSite("iq__SufWAMfhP6P2tTUSrmdTjRdPfUM", "");
+//           } 
+//         }
+
+//         render={() => {
+//           if(!this.props.siteStore.client) { return null; }
+
+//           return (
+//             <Switch>
+//               <Route
+//                 exact
+//                 path={[
+//                   "/"
+//                 ]}
+//                 component={Site}
+//               />
+              
+//               <Route exact path="/overview/:titleID" component={OverviewPage} />
+//               <Route exact path="/code/:titleID" component={CodeAccess} />
+//               <Route exact path="/title/:titleID" component={TitlePage} />
+
+//               <Route>
+//                 <Redirect to="/" />
+//               </Route>
+//               <Route>
+//                 <Redirect to="/code/iq__YfEF1A8sUvMj5WcMCJEDk4aEwND" />
+//               </Route>
+//             </Switch>
+
+//           );
+//         }}
+//       />
+      
+//     );
+//   }
+// }
 
 @inject("rootStore")
 @inject("siteStore")
@@ -60,6 +113,29 @@ class App extends React.Component {
     `;
 
     return (
+      // <AsyncComponent
+      //   Load={
+      //     async () => {
+      //       await this.props.rootStore.InitializeClient();
+      //     } 
+      //   }
+
+      //   render={() => {
+      //     if(!this.props.siteStore.client) { return null; }
+
+      //     return (
+      //       <ContainerApp>
+      //         <main>
+      //           {/* { this.props.rootStore.error ? <div className="error-message">{ this.props.rootStore.error }</div> : null } */}
+      //           <HashRouter>
+      //             <Routes />
+      //           </HashRouter>
+      //         </main>
+      //       </ContainerApp>
+
+      //     );
+      //   }}
+      // />
       <ContainerApp>
         <main>
           { this.props.rootStore.error ? <h3 className="error-message">{ this.props.rootStore.error }</h3> : null }

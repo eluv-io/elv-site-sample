@@ -3,6 +3,16 @@ import {inject, observer} from "mobx-react";
 import SubscriptionPayment from "../payment/SubscriptionPayment";
 import {ImageIcon} from "elv-components-js";
 import ViewTrailer from "../video/ViewTrailer";
+import {
+  Link
+} from "react-router-dom";
+
+const FormatName = (name) => {
+  return (name || "")
+    .split(/[_, \s]/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 @inject("rootStore")
 @inject("siteStore")
@@ -68,13 +78,16 @@ class VideoFeature extends React.Component {
 
         <div className="video-feature__container">
           { customLogo ? <ImageIcon className="video-feature__titleIcon" icon={customLogo} label="logo"/> : <h1 className="video-feature__title"> {featuredTitle.displayTitle} </h1>}
-
           <div className="video-feature__button">
-            { this.props.siteStore.boughtSubscription ? this.afterSubscribe() : this.preSubscribe()}
+            <Link to={`/${this.props.siteStore.siteParams.objectId}/play/${FormatName(featuredTitle.displayTitle)}`} >
+              { this.props.siteStore.boughtSubscription ? this.afterSubscribe() : this.preSubscribe()}
+            </Link>
 
-            <button onClick={() => this.props.siteStore.SetSingleTitle(featuredTitle)} className="btnDetails btnDetails__featureDetail">
-                VIEW DETAILS
-            </button>
+            <Link to={`/${this.props.siteStore.siteParams.objectId}/overview/${FormatName(featuredTitle.displayTitle)}`} >
+              <button onClick={() => this.props.siteStore.SetSingleTitle(featuredTitle)} className="btnDetails btnDetails__featureDetail">
+                  VIEW DETAILS
+              </button>
+            </Link>
           </div>
         </div>
 

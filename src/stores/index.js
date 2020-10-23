@@ -64,7 +64,7 @@ class RootStore {
     this.client = client;
   });
 
-  RedeemCode = flow(function * (siteSelectorId, email, code) {
+  RedeemCode = flow(function * (siteSelectorId, code) {
     let client;
     try {
       const hash = Hash(code);
@@ -115,7 +115,7 @@ class RootStore {
 
       client.SetSigner({signer});
 
-      this.email = email;
+      // this.email = email;
       this.accessCode = code;
       this.client = client;
 

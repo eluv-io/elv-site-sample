@@ -114,10 +114,10 @@ class ViewTitle extends React.Component {
     if(!this.props.siteStore.activeTitle) { return null; }
 
     return (
-      <React.Fragment>
+      <div>
         <BackButton />
         { this.VideoPage() }  
-      </React.Fragment>
+      </div>
     );
   }
 }

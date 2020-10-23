@@ -1,6 +1,6 @@
 .code-entry-container {
   display: grid;  
-  grid-template-rows: 30vh; 
+  grid-template-rows: 35vh; 
 }
 
 .code-entry {
@@ -9,16 +9,16 @@
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  height: MIN(36rem, 90vh); 
+  height: MIN(30rem, 90vh); 
   justify-content: center;
   margin: auto;
   width: MIN(424px, 90vw);
   z-index: 100;
 
   &--logo {
-    height: 7rem;
+    height: 65px;
     margin-bottom: 2rem;
-    width: 32rem; 
+    width: auto; 
   }
 
   &__title {

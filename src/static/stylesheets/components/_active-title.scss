@@ -1,6 +1,6 @@
 .active-background {
   height: 100vh;
-  margin: calc(-3vh - 4rem) -4vw;
+  margin: calc(-3vh - 8rem) -10vw;
   position: absolute;
   width: 100vw;
 
@@ -10,7 +10,9 @@
   align-self: start;
   display: grid;
   grid-row-gap: 1.2rem;
-  
+//   margin-left: 10vw;
+//   margin-right: 10vw;
+
   grid-template-rows: 40vh [title-start] min-content [title-end timer-start] min-content [timer-end button-start] min-content [button-end overview-start] min-content ;
   @media only screen and (max-width: $bp-medium-2) {
       grid-template-rows: 47.5vh [title-start] min-content [title-end timer-start] min-content [timer-end button-start] min-content [button-end overview-start] min-content [overview-end] ;
@@ -49,6 +51,7 @@
     grid-row: title-start / title-start;
     height: 20.4rem;
     width: 51rem;
+    margin: auto;
     @media only screen and (max-width: $bp-small-3) {
         height: 18rem;
         margin: auto;
@@ -93,6 +96,8 @@
   }
 
   &__button {
+     margin: auto;
+
       grid-row: button-start / button-end;
       @media only screen and (max-width: $bp-small-2) {
           align-items: flex-start;

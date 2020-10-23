@@ -4,7 +4,7 @@
   -webkit-transition: ease-in 1s;
   background-color: transparent; 
   height: 8rem;
-  margin: 0 -4vw;
+  margin: 0 -10vw;
   position: fixed;
   transition: all 1s;
   transition: all 1s ease-in;
@@ -19,23 +19,17 @@
    align-items: center;
    background-color: transparent;
    display: flex;
-   height: 6.7rem;
+   height: 100%;
+   width: 100%;
    justify-content: flex-start;
+   margin-left: 12vw;
 
    &--logo { 
-      height: 6.5rem;
-      margin-left: 4vw;
-      margin-top: 3rem;
-      padding-right: 1rem;
-      width: 25rem;
-   }
-
-   &--elv-logo { 
-      height: 3rem;
-      margin-left: 4vw;
-      margin-top: 1rem;
-      padding-right: 1rem;
-      width: 12rem;
+      height: 36px;
+      margin-left: 10vw;
+      margin-top: 2.2rem;
+      margin-bottom: 2.2rem;
+      width: auto;
    }
 
    &--search {
@@ -44,7 +38,7 @@
       flex-grow: 1;
       justify-content: flex-end;
       margin-top: 3rem;
-      padding-right: 4vw;
+      margin-right: 10vw;
 
       &__subscribe { 
          margin-left: 4vw;
@@ -78,8 +72,10 @@
       display: flex;
       flex-grow: 1;
       justify-content: flex-end;
-      margin-top: 2rem;
-      padding-right: 4vw;
+      margin-top: 3.25rem;
+      margin-bottom: 3.25rem;
+
+      padding-right: 10vw;
 
       &__subscribe { 
          margin-left: 4vw;
@@ -112,10 +108,11 @@
 
 .logo {
   cursor: pointer;
-  height: 2.2rem;
+  height: 2.5rem;
   margin-top: -.2rem;
   transform: translateX(2.7rem) translateY(.5rem);
   width: 2.2rem;
+//   margin-right: 10vw;
 }
 
 .hide {

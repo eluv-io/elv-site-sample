@@ -5,6 +5,17 @@ import {ImageIcon} from "elv-components-js";
 import NavigationBar from "../navigation/NavigationBar";
 import SubscriptionPayment from "../payment/SubscriptionPayment";
 
+import {
+  Link
+} from "react-router-dom";
+
+const FormatName = (name) => {
+  return (name || "")
+    .split(/[_, \s]/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
 @inject("rootStore")
 @inject("siteStore")
 @observer
@@ -40,12 +51,14 @@ class ActiveTitle extends React.Component {
   RegularButtons() {
     return (
       <div className="active-view-container__button">
+        <Link to={`/${this.props.siteStore.siteParams.objectId}/play/${FormatName(this.props.siteStore.singleTitle.displayTitle)}`}>
+
         { this.props.siteStore.boughtSubscription ? this.playPremiere() : this.preSubscribe()}
 
-        
         <button onClick={() => this.props.siteStore.PlayTitle(this.props.siteStore.singleTitle)} className="btnPlay btnDetails__heroDetail">
           Watch Trailer
         </button>
+        </Link>
       </div>
     );
   }
@@ -53,6 +66,9 @@ class ActiveTitle extends React.Component {
   
 
   render() {
+    if(!this.props.siteStore.siteCustomization || (!this.props.rootStore.accessCode)) {
+      return <Redirect to={`/code/iq__YfEF1A8sUvMj5WcMCJEDk4aEwND`} />;
+    }
 
     const featuredTitle = this.props.siteStore.singleTitle;
     const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -85,20 +101,27 @@ class ActiveTitle extends React.Component {
     );
 
     return (
-      <React.Fragment >
+      <div className="container">
         <NavigationBar />
 
         <div style={backgroundStyle} className="active-background" />
         <div className="active-view-container active-view-container__done">
-          { customLogo ? <ImageIcon className="active-view-container__logo" icon={customLogo} label="logo"/> : <h1 className="active-view-container__heading"> {featuredTitle.displayTitle} </h1>}
+          {/* <div className="active-view-container__overview">  */}
+            { customLogo ? <ImageIcon className="active-view-container__logo" icon={customLogo} label="logo"/> : <h1 className="active-view-container__heading"> {featuredTitle.displayTitle} </h1>}
+            { this.state.isSeries ? null : this.RegularButtons()}
+          {/* </div> */}
 
-          { this.state.isSeries ? null : this.RegularButtons()}
 
           <div className="active-view-container__overview">
             <PremiereTabs title={featuredTitle}/>
           </div>
         </div>
-      </React.Fragment>
+        <div className="live-footer">
+          <h3 className="live-footer__title">
+            Copyright © Eluvio 2020 
+          </h3>
+        </div>
+      </div>
     );
   }
 }

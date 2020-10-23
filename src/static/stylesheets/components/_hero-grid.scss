@@ -1,6 +1,6 @@
 .hero-grid-container {
-  height: 100vh;
-  margin: calc(-3vh - 4rem) -4vw;
+  height: 87.5vh;
+  margin: calc(-3vh - 4rem) -10vw;
   margin-bottom: 3rem;
   width: 100vw;
     @media only screen and (max-width: $bp-small) {
@@ -12,17 +12,18 @@
   align-self: end;
   display: grid;  
   grid-row-gap: 1.2rem;
-  grid-template-rows: 67.5vh [logo-start] minmax(4vh, min-content) [logo-end button-start] minmax(4vh, min-content) [button-end] minmax(4vh, min-content) 5vh;  
+  
+  grid-template-rows: 60vh [logo-start] minmax(4vh, min-content) [logo-end button-start] minmax(4vh, min-content) [button-end] minmax(4vh, min-content) 5vh;  
   &__heading {
     font-size: 6rem;
     grid-row: title-start / title-end;
-    margin-left: 4vw;
+    margin-left: 10vw;
   }  
 
   &__heading-hero {
     font-size: 6rem;
     grid-row: logo-start / logo-end;
-    margin-left: 4vw;
+    margin-left: 10vw;
     margin-top: 14rem;
     @media only screen and (max-width: $bp-medium) {
       font-size: 5.5rem;
@@ -36,7 +37,7 @@
   &__logo {
     grid-row: logo-start / logo-end;
     height: 20.4rem;
-    margin-left: 4vw;  
+    margin-left: 10vw;  
     width: 51rem;
     @media only screen and (max-width: $bp-small-3) {
       height: 18rem;
@@ -59,7 +60,7 @@
 
   &__timer {
     grid-row: timer-start / timer-end;
-    margin-left: 4vw;
+    margin-left: 10vw;
   }  
 
   &__button {
@@ -75,7 +76,7 @@
         margin-top: 1rem;
       }
     }
-    margin-left: 4vw;  
+    margin-left: 10vw;  
   }  
 
   &__overview {

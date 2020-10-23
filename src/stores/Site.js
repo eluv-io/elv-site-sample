@@ -137,7 +137,7 @@ class SiteStore {
 
   ///////////////////////////////////////
   //Subscription
-  @observable boughtSubscription = false;
+  @observable boughtSubscription = true;
 
   @action.bound
   buySubscription() {
@@ -240,7 +240,7 @@ class SiteStore {
       )
       .sort((a, b) => a.name < b.name ? -1 : 1);
   }
-
+  
   @action.bound
   LoadSite = flow(function * (objectId, writeToken) {
     if(this.siteParams && this.siteParams.objectId === objectId) {
@@ -269,6 +269,8 @@ class SiteStore {
       resolveIncludeSource: true,
       resolveIgnoreErrors: true
     })) || DEFAULT_SITE_CUSTOMIZATION;
+
+    // console.log(this.siteCustomization.arrangement);
 
     if(this.siteCustomization.premiere) {
       this.premiere = {

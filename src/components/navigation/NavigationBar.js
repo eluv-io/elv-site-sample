@@ -70,16 +70,10 @@ class NavigationBar extends Component {
     const { scrolling } = this.state;
     const customLogo = (this.props.siteStore.logoUrl ? this.props.siteStore.logoUrl : Logo);
     const NavBar = styled.nav`
-      transition: all 1s ease-in;
-      transition-timing-function: ease-in;
-      -webkit-transition: ease-in 1s;
-      -moz-transition: ease-in 1s;
-      -o-transition: ease-in 1s;
-      transition: ease-in 1s;
       color: ${this.props.siteStore.primaryFontColor};
       &.active {
         background-color: ${this.props.siteStore.backgroundColor};
-        width: 100vw;
+        width: 100%;
         transition: all 1s ease-in;
         transition-timing-function: ease-in;
         -webkit-transition: ease-in 1s;
@@ -93,8 +87,7 @@ class NavigationBar extends Component {
       <NavBar className={"navigation " + (scrolling ? "active" : "")} >
         <ul className="navigation__container">
           <ImageIcon className="navigation__container--logo" icon={customLogo} label="Eluvio" onClick={this.props.siteStore.OffSingleTitle}/>
-
-
+          
           <div className={this.props.siteStore.premiere ? "navigation__container--search hide" : (this.props.siteStore.boughtSubscription ? "navigation__container--newsearch" : "navigation__container--search")}>
             <SubscriptionPayment isNav={true} />
             <FaSearch className="logo"/>
