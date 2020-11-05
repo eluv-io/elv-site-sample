@@ -6,6 +6,7 @@ import {ImageIcon} from "elv-components-js";
 import {DateTime} from "luxon";
 
 import FallbackIcon from "../../static/icons/video.svg";
+import {InitializeFairPlayStream} from "../../FairPlay";
 
 @inject("siteStore")
 @observer
@@ -15,7 +16,7 @@ class ChannelSchedule extends React.Component {
 
     this.state = {
       startIndex: props.currentIndex || 0,
-      visible: 5
+      visible: 5,
     };
   }
 
@@ -97,6 +98,16 @@ class ActiveTitle extends React.Component {
     super(props);
 
     this.state = {
+      protocol: "dash",
+      native: false,
+      audioTracks: {
+        current: -1,
+        available: []
+      },
+      textTracks: {
+        current: -1,
+        available: []
+      },
       showControls: false,
       activeTab: "Video",
       tabs: ["Video", "Details", "Metadata"]
@@ -173,6 +184,8 @@ class ActiveTitle extends React.Component {
 
     this.DestroyPlayer();
 
+    this.video = element;
+
     try {
       element.addEventListener("canplay", () => this.setState({showControls: true}));
 
@@ -187,6 +200,8 @@ class ActiveTitle extends React.Component {
       if(this.props.siteStore.dashSupported && playoutOptions.dash) {
         // DASH
 
+        this.setState({protocol: "dash"});
+
         player = DashJS.MediaPlayer().create();
 
         const playoutUrl = (playoutOptions.dash.playoutMethods.widevine || playoutOptions.dash.playoutMethods.clear).playoutUrl;
@@ -200,29 +215,225 @@ class ActiveTitle extends React.Component {
           });
         }
 
+        player.on(
+          DashJS.MediaPlayer.events.CAN_PLAY,
+          () => {
+            this.setState({
+              audioTracks: {
+                current: player.getCurrentTrackFor("audio").index,
+                available: player.getTracksFor("audio").map(audioTrack =>
+                  ({
+                    index: audioTrack.index,
+                    label: audioTrack.labels && audioTrack.labels.length > 0 ? audioTrack.labels[0].text : audioTrack.lang
+                  })
+                )
+              }
+            });
+          }
+        );
+
+        player.on(
+          DashJS.MediaPlayer.events.TEXT_TRACK_ADDED,
+          () => {
+
+            const available = player.getTracksFor("text").map(textTrack =>
+              ({
+                index: textTrack.index,
+                label: textTrack.labels && textTrack.labels.length > 0 ? textTrack.labels[0].text : textTrack.lang
+              })
+            );
+
+            this.setState({
+              textTracks: {
+                current: available.findIndex(track => track.index === player.getCurrentTrackFor("text").index),
+                available
+              }
+            });
+          }
+        );
+
         player.initialize(element, playoutUrl);
       } else {
         // HLS
 
-        // Prefer AES playout
-        const playoutUrl = (playoutOptions.hls.playoutMethods["aes-128"] || playoutOptions.hls.playoutMethods.clear).playoutUrl;
+        this.setState({protocol: "hls"});
 
         if(!HLSPlayer.isSupported()) {
-          element.src = playoutUrl;
+          if(this.props.siteStore.availableDRMs.includes("fairplay")) {
+            InitializeFairPlayStream({playoutOptions, video: element});
+          } else {
+            // Prefer AES playout
+            element.src = (
+              playoutOptions.hls.playoutMethods["sample-aes"] ||
+              playoutOptions.hls.playoutMethods["aes-128"] ||
+              playoutOptions.hls.playoutMethods.clear
+            ).playoutUrl;
+          }
+
+          this.setState({native: true});
+
           return;
         }
 
-        const player = new HLSPlayer();
+        // Prefer AES playout
+        const playoutUrl = (
+          playoutOptions.hls.playoutMethods["aes-128"] ||
+          playoutOptions.hls.playoutMethods.clear
+        ).playoutUrl;
+
+        player = new HLSPlayer();
+
+        player.on(HLSPlayer.Events.AUDIO_TRACK_SWITCHED, () => {
+          this.setState({
+            audioTracks: {
+              current: player.audioTrack,
+              available: player.audioTrackController.tracks.map(audioTrack =>
+                ({
+                  index: audioTrack.id,
+                  label: audioTrack.name
+                })
+              )
+            }
+          });
+        });
+
+        player.on(HLSPlayer.Events.SUBTITLE_TRACK_LOADED, () => {
+          this.setState({
+            textTracks: {
+              current: player.subtitleTrack,
+              available: Array.from(this.video.textTracks)
+            }
+          });
+        });
+
+        player.on(HLSPlayer.Events.SUBTITLE_TRACK_SWITCH, () => {
+          this.setState({
+            textTracks: {
+              current: player.subtitleTrack,
+              available: Array.from(this.video.textTracks)
+            }
+          });
+        });
+
         player.loadSource(playoutUrl);
         player.attachMedia(element);
       }
 
       this.player = player;
-      this.video = element;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
     }
+  }
+
+  Tracks() {
+    if(this.state.native || !this.player || (this.state.audioTracks.available.length <= 1 && this.state.textTracks.available.length === 0)) {
+      return null;
+    }
+
+    let SetAudioTrack, SetTextTrack;
+    if(this.state.protocol === "hls") {
+      SetAudioTrack = event => {
+        this.player.audioTrack = parseInt(event.target.value);
+      };
+
+      SetTextTrack = event => {
+        const index = parseInt(event.target.value);
+        this.player.subtitleTrack = index;
+
+        this.setState({
+          textTracks: {
+            available: this.state.textTracks.available,
+            current: index
+          }
+        });
+      };
+    } else {
+      SetAudioTrack = event => {
+        const index = parseInt(event.target.value);
+
+        const track = this.player.getTracksFor("audio").find(track => track.index === index);
+
+        this.player.setCurrentTrack(track);
+
+        this.setState({
+          audioTracks: {
+            available: this.state.audioTracks.available,
+            current: index
+          }
+        });
+      };
+
+      SetTextTrack = event => {
+        const index = parseInt(event.target.value);
+
+        this.player.setTextTrack(index);
+
+        this.setState({
+          textTracks: {
+            available: this.state.textTracks.available,
+            current: index
+          }
+        });
+      };
+    }
+
+    let textTrackSelection;
+    if(this.state.textTracks.available.length > 0) {
+      textTrackSelection = (
+        <select
+          aria-label="Subtitle Track"
+          value={this.state.textTracks.current}
+          className="video-playback-control"
+          onChange={SetTextTrack}
+        >
+          <option value={-1}>Subtitles: None</option>
+          {
+            this.state.textTracks.available.map((track, index) => {
+              let label;
+              try {
+                label = this.state.protocol === "dash" ?
+                  this.player.getTracksFor("text")[index].labels[0].text :
+                  track.label;
+              } catch (error) {
+                label = track.lang;
+              }
+
+              return (
+                <option value={index} key={`audio-track-${index}`}>
+                  Subtitles: { label }
+                </option>
+              );
+            })
+          }
+        </select>
+      );
+    }
+
+    let audioTrackSelection;
+    if(this.state.audioTracks.available.length > 1) {
+      audioTrackSelection = (
+        <select
+          aria-label="Audio Track"
+          value={this.state.audioTracks.current}
+          className="video-playback-control"
+          onChange={SetAudioTrack}
+        >
+          {
+            this.state.audioTracks.available.map(({index, label}) =>
+              <option value={index} key={`audio-track-${index}`}>Audio: {label}</option>
+            )
+          }
+        </select>
+      );
+    }
+
+    return (
+      <React.Fragment>
+        { textTrackSelection }
+        { audioTrackSelection }
+      </React.Fragment>
+    );
   }
 
   Offerings() {
@@ -239,7 +450,7 @@ class ActiveTitle extends React.Component {
       >
         {Object.keys(availableOfferings).map(offeringKey =>
           <option key={`offering-${offeringKey}`} value={offeringKey}>
-            { availableOfferings[offeringKey].display_title || offeringKey }
+            Offering: { availableOfferings[offeringKey].display_title || offeringKey }
           </option>
         )}
       </select>
@@ -329,7 +540,7 @@ class ActiveTitle extends React.Component {
       displayTitle = program.title || displayTitle;
       synopsis = program.description !== undefined ? program.description : synopsis;
     }
-    
+
     // Include poster image to pre-load it for details page
     return (
       <div className={`active-title-video-page ${this.state.activeTab === "Video" ? "" : "hidden"}`}>
@@ -341,9 +552,12 @@ class ActiveTitle extends React.Component {
           controls={this.state.showControls}
         />
         <div className="video-info">
+          <div className="video-options">
+            { this.Tracks() }
+            { this.Offerings() }
+          </div>
           <h4>
             { displayTitle.toString() }
-            { this.Offerings() }
           </h4>
           <div className="synopsis">
             { synopsis.toString() }

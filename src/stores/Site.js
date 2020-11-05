@@ -12,6 +12,7 @@ class SiteStore {
 
   @observable siteInfo;
   @observable dashSupported = false;
+  @observable availableDRMs;
   @observable activeTitle;
   @observable playoutUrl;
   @observable authToken;
@@ -105,8 +106,8 @@ class SiteStore {
       this.loading = true;
 
       const isSubSite = this.sites.length > 0;
-      const availableDRMS = yield this.client.AvailableDRMs();
-      this.dashSupported = availableDRMS.includes("widevine");
+      this.availableDRMs = yield this.client.AvailableDRMs();
+      this.dashSupported = this.availableDRMs.includes("widevine");
 
       const versionHash = yield this.client.LatestVersionHash({objectId});
 
@@ -235,8 +236,7 @@ class SiteStore {
           const linkPath = UrlJoin("public", "asset_metadata", metadataKey, index, titleKey);
           title.playoutOptionsLinkPath = UrlJoin(linkPath, "sources", "default");
           title.baseLinkPath = linkPath;
-          title.baseLinkUrl =
-            await this.client.LinkUrl({versionHash, linkPath});
+          title.baseLinkUrl = await this.client.LinkUrl({versionHash, linkPath});
 
           Object.assign(title, await this.ImageLinks({baseLinkUrl: title.baseLinkUrl, versionHash: title.versionHash, images: title.images}));
 

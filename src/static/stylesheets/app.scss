@@ -446,31 +446,12 @@ nav {
     width: 100%;
   }
 
-  .active-title-offerings {
-    background: $elv-color-bg-dark;
-    border: 0;
-    border-radius: $elv-spacing-xxs;
-    position: absolute;
-    right: 0;
-    text-align: center;
-    text-align-last: center;
-    width: 10rem;
-
-    option {
-      text-align: center;
-    }
-
-    &:hover {
-      background: $elv-color-darkergray;
-    }
-  }
-
   video {
     background-color: $elv-color-black;
     border-radius: 0.5rem;
     cursor: pointer;
     height: 1080px;
-    max-height: 55vh;
+    max-height: 50vh;
     scroll-margin: 10rem;
     width: 100%;
   }
@@ -479,6 +460,19 @@ nav {
     display: flex;
     flex-direction: column;
     width: 85%;
+  }
+
+  .video-options {
+    display: flex;
+    justify-content: center;
+
+    select {
+      background: none;
+      border: 1px solid $elv-color-darkgray;
+      margin: $elv-spacing-xs;
+      padding: 0 $elv-spacing-xs;
+      text-align: center;
+    }
   }
 
   .synopsis {
