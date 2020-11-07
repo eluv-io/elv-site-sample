@@ -462,7 +462,7 @@ class ActiveTitle extends React.Component {
 
     return (
       <div className={`active-title-metadata ${this.state.activeTab === "Metadata" ? "" : "hidden"}`}>
-        <h2>{ title.displayTitle.toString() } - Metadata</h2>
+        <h2>{ this.props.siteStore.Localized(title, "title") } - Metadata</h2>
         <div className="metadata-path">{title.isSearchResult ? "" : this.props.siteStore.currentSite.name + " - "}{title.baseLinkPath}</div>
         <pre>
           { JSON.stringify(title.metadata, null, 2)}
@@ -476,16 +476,21 @@ class ActiveTitle extends React.Component {
 
     const titleInfo = title.info || {};
 
+    let genre = this.props.siteStore.Localized(title, "genre");
+    if(!Array.isArray(genre)) {
+      genre = [genre];
+    }
+
     const Maybe = (value, render) => value ? render() : null;
 
     return (
       <div className={`active-title-details-page ${this.state.activeTab === "Details" ? "" : "hidden"}`}>
         <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl || FallbackIcon} alternateIcon={FallbackIcon} className="active-title-detail-image" title="Poster" />
         <div className="active-title-details">
-          <h2>{ title.displayTitle.toString() }</h2>
+          <h2>{ this.props.siteStore.Localized(title, "title") }</h2>
           {Maybe(
             titleInfo.synopsis,
-            () => <div className="synopsis">{ titleInfo.synopsis.toString() }</div>
+            () => <div className="synopsis">{ this.props.siteStore.Localized(title, "synopsis") }</div>
           )}
           <div className="details-section">
             {Maybe(
@@ -506,7 +511,14 @@ class ActiveTitle extends React.Component {
               titleInfo.release_date,
               () => <div className="detail">
                 <label>Release Date</label>
-                { new Date(titleInfo.release_date).toLocaleDateString("en-US", {year: "numeric", month: "long", day: "numeric"}) }
+                { new Date(titleInfo.release_date).toLocaleDateString(this.props.siteStore.language || "en-US", {year: "numeric", month: "long", day: "numeric"}) }
+              </div>
+            )}
+            {Maybe(
+              genre,
+              () => <div className="detail">
+                <label>Genre</label>
+                { genre.join(", ") }
               </div>
             )}
             {Maybe(
@@ -520,7 +532,7 @@ class ActiveTitle extends React.Component {
           {Maybe(
             titleInfo.copyright,
             () => <div className="copyright">
-              { titleInfo.copyright.toString().startsWith("©") ? "" : "©" } { titleInfo.copyright.toString() }
+              { titleInfo.copyright.toString().startsWith("©") ? "" : "©" } { this.props.siteStore.Localized(title, "copyright") }
             </div>
           )}
         </div>
@@ -533,8 +545,8 @@ class ActiveTitle extends React.Component {
 
     const title = this.props.siteStore.activeTitle;
 
-    let displayTitle = title.displayTitle;
-    let synopsis = (title.info || {}).synopsis || "";
+    let displayTitle = this.props.siteStore.Localized(title, "title");
+    let synopsis = this.props.siteStore.Localized(title, "synopsis");
     if(currentIndex !== undefined) {
       const program = schedule[currentIndex];
       displayTitle = program.title || displayTitle;

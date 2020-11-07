@@ -624,6 +624,23 @@ nav {
   }
 }
 
+
+.localization {
+  position: absolute;
+  right: 15rem;
+
+
+  select {
+    background: none;
+    border: 1px solid $elv-color-darkgray;
+    height: $elv-spacing-l;
+    margin: $elv-spacing-xs;
+    padding: 0 $elv-spacing-xs;
+    text-align: center;
+    width: 10rem;
+  }
+}
+
 .source-link {
   align-items: center;
   background: $elv-color-bg-dark;

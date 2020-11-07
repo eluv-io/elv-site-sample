@@ -28,13 +28,52 @@ class App extends React.Component {
     );
   }
 
+  Localization() {
+    let languages, territories;
+    if(Object.keys(this.props.siteStore.localization.territories).length > 0) {
+      territories = (
+        <select value={this.props.siteStore.territory} onChange={event => this.props.siteStore.SetTerritory(event.target.value)}>
+          {
+            Object.keys(this.props.siteStore.localization.territories).sort().map(territory =>
+              <option key={`territory-${territory}`} value={territory}>{ territory }</option>
+            )
+          }
+        </select>
+      );
+    }
+
+    const availableLanguages = this.props.siteStore.localization.territories[this.props.siteStore.territory] || this.props.siteStore.localization.languages;
+    if(availableLanguages.length > 0) {
+      languages = (
+        <select value={this.props.siteStore.language} onChange={event => this.props.siteStore.SetLanguage(event.target.value)}>
+          {
+            availableLanguages.sort().map(language =>
+              <option key={`language-${language}`} value={language}>{ language }</option>
+            )
+          }
+        </select>
+      );
+    }
+
+    if(!territories && !languages) {
+      return null;
+    }
+
+    return (
+      <div className="localization">
+        { territories }
+        { languages }
+      </div>
+    );
+  }
+
   App() {
     if(!this.props.rootStore.client) {
       return <LoadingElement loading={true} fullPage={true}/>;
     }
 
     if(this.props.siteStore.currentSite) {
-      return <Site key={`site-${this.props.siteStore.siteId}`} />;
+      return <Site key={`site-${this.props.siteStore.siteId}-${this.props.siteStore.territory}-${this.props.siteStore.language}`} />;
     } else if(this.props.rootStore.siteSelector) {
       return (
         <CodeAccess />
@@ -53,7 +92,7 @@ class App extends React.Component {
       <div className="app-container">
         <header>
           <ImageIcon className="logo" icon={Logo} label="Eluvio" onClick={this.props.rootStore.ReturnToApps}/>
-
+          { this.Localization() }
           { this.SourceLink() }
         </header>
         <main>

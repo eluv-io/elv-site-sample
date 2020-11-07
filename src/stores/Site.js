@@ -4,11 +4,35 @@ import UrlJoin from "url-join";
 import Id from "@eluvio/elv-client-js/src/Id";
 import { v4 as UUID } from "uuid";
 
+const SafeTraverse = (object, ...keys) => {
+  if(keys.length === 1 && Array.isArray(keys[0])) {
+    keys = keys[0];
+  }
+
+  let result = object;
+
+  for(let i = 0; i < keys.length; i++){
+    result = result[keys[i]];
+
+    if(result === undefined) { return undefined; }
+  }
+
+  return result;
+};
+
 class SiteStore {
   @observable sites = [];
   @observable loading = false;
 
   @observable siteLibraryId;
+
+  @observable localization = {
+    territories: {},
+    languages: []
+  };
+
+  @observable territory = "U.S.A.";
+  @observable language = "en";
 
   @observable siteInfo;
   @observable dashSupported = false;
@@ -53,8 +77,33 @@ class SiteStore {
     return this.sites[0];
   }
 
+  Localized(source, field) {
+    const value = SafeTraverse(source, "info_territories", this.territory, this.language, field) ||
+      SafeTraverse(source, "info_locals", this.language, field);
+
+    if(!value || (value["."] && value["."].resolution_error)) {
+      return SafeTraverse(source, "info", field) ||
+        SafeTraverse(source, field);
+    }
+
+    return value;
+  }
+
   constructor(rootStore) {
     this.rootStore = rootStore;
+  }
+
+  @action.bound
+  SetLanguage(language) {
+    this.language = language;
+  }
+
+  @action.bound
+  SetTerritory(territory) {
+    this.territory = territory;
+
+    const territoryLanguages = this.localization.territories[territory] || [];
+    this.language = territoryLanguages.includes(this.language) ? this.language : territoryLanguages[0] || "en";
   }
 
   @action.bound
@@ -123,13 +172,18 @@ class SiteStore {
           "display_title",
           "channels",
           "episodes",
+          "languages",
           "playlists",
           "seasons",
           "series",
+          "territories",
           "titles",
           UUID()
         ]
       });
+
+      this.localization.languages = siteInfo.languages || [];
+      this.localization.territories = siteInfo.territories || [];
 
       if(!isSubSite) {
         this.searchIndex = yield this.client.ContentObjectMetadata({versionHash, metadataSubtree: "public/site_index"});
@@ -226,8 +280,6 @@ class SiteStore {
             return;
           }
 
-          title.displayTitle = title.display_title || title.title || "";
-
           title.versionHash = title["."].source;
           title.objectId = this.client.utils.DecodeVersionHash(title.versionHash).objectId;
 
@@ -271,7 +323,6 @@ class SiteStore {
               try {
                 let title = list[titleSlug];
 
-                title.displayTitle = title.display_title || title.title || "";
                 title.versionHash = title["."].source;
                 title.objectId = this.client.utils.DecodeVersionHash(title.versionHash).objectId;
 
