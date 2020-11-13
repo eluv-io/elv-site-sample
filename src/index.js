@@ -29,10 +29,14 @@ class App extends React.Component {
   }
 
   Localization() {
+    if(this.props.siteStore.sites.length !== 1) {
+      return null;
+    }
+
     let languages, territories;
     if(Object.keys(this.props.siteStore.localization.territories).length > 0) {
       territories = (
-        <select value={this.props.siteStore.territory} onChange={event => this.props.siteStore.SetTerritory(event.target.value)}>
+        <select value={this.props.siteStore.territory} onChange={async event => await this.props.siteStore.SetTerritory(event.target.value)}>
           {
             Object.keys(this.props.siteStore.localization.territories).sort().map(territory =>
               <option key={`territory-${territory}`} value={territory}>{ territory }</option>
@@ -45,7 +49,7 @@ class App extends React.Component {
     const availableLanguages = this.props.siteStore.localization.territories[this.props.siteStore.territory] || this.props.siteStore.localization.languages;
     if(availableLanguages.length > 0) {
       languages = (
-        <select value={this.props.siteStore.language} onChange={event => this.props.siteStore.SetLanguage(event.target.value)}>
+        <select value={this.props.siteStore.language} onChange={async event => await this.props.siteStore.SetLanguage(event.target.value)}>
           {
             availableLanguages.sort().map(language =>
               <option key={`language-${language}`} value={language}>{ language }</option>

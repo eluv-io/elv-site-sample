@@ -196,6 +196,16 @@ class ActiveTitle extends React.Component {
 
       playoutOptions = playoutOptions[offering];
 
+      let initialized = false;
+      const InitializeTracks = async () => {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        if(!initialized) {
+          this.InitializeTracks();
+          initialized = true;
+        }
+      };
+
       let player;
       if(this.props.siteStore.dashSupported && playoutOptions.dash) {
         // DASH
@@ -224,11 +234,12 @@ class ActiveTitle extends React.Component {
                 available: player.getTracksFor("audio").map(audioTrack =>
                   ({
                     index: audioTrack.index,
-                    label: audioTrack.labels && audioTrack.labels.length > 0 ? audioTrack.labels[0].text : audioTrack.lang
+                    label: audioTrack.labels && audioTrack.labels.length > 0 ? audioTrack.labels[0].text : audioTrack.lang,
+                    language: audioTrack.lang
                   })
                 )
               }
-            });
+            }, InitializeTracks);
           }
         );
 
@@ -239,7 +250,8 @@ class ActiveTitle extends React.Component {
             const available = player.getTracksFor("text").map(textTrack =>
               ({
                 index: textTrack.index,
-                label: textTrack.labels && textTrack.labels.length > 0 ? textTrack.labels[0].text : textTrack.lang
+                label: textTrack.labels && textTrack.labels.length > 0 ? textTrack.labels[0].text : textTrack.lang,
+                language: textTrack.lang
               })
             );
 
@@ -283,6 +295,8 @@ class ActiveTitle extends React.Component {
 
         player = new HLSPlayer();
 
+        player.on(HLSPlayer.Events.AUDIO_TRACK_LOADED, InitializeTracks);
+
         player.on(HLSPlayer.Events.AUDIO_TRACK_SWITCHED, () => {
           this.setState({
             audioTracks: {
@@ -290,7 +304,8 @@ class ActiveTitle extends React.Component {
               available: player.audioTrackController.tracks.map(audioTrack =>
                 ({
                   index: audioTrack.id,
-                  label: audioTrack.name
+                  label: audioTrack.name,
+                  language: audioTrack.lang
                 })
               )
             }
@@ -326,56 +341,75 @@ class ActiveTitle extends React.Component {
     }
   }
 
+  InitializeTracks() {
+    const textTrackIndex = this.state.textTracks.available.findIndex(track =>
+      (track.language || "").toLowerCase() === (this.props.siteStore.language || "").toLowerCase()
+    );
+
+    if(textTrackIndex >= 0) {
+      this.SetTextTrack(textTrackIndex);
+    } else {
+      const defaultTextTrackIndex = this.state.textTracks.available.findIndex(track =>
+        (track.language || "").toLowerCase() === "en"
+      );
+
+      if(defaultTextTrackIndex) {
+        this.SetAudioTrack(defaultTextTrackIndex);
+      }
+    }
+
+    const audioTrack = this.state.audioTracks.available.find(track =>
+      (track.language || "").toLowerCase() === (this.props.siteStore.language || "").toLowerCase()
+    );
+
+    if(audioTrack) {
+      this.SetAudioTrack(audioTrack.index);
+    } else {
+      const defaultAudioTrack = this.state.audioTracks.available.find(track =>
+        (track.language || "").toLowerCase() === "en"
+      );
+
+      if(defaultAudioTrack) {
+        this.SetAudioTrack(defaultAudioTrack.index);
+      }
+    }
+  }
+
+  SetAudioTrack(index) {
+    if(this.state.protocol === "hls") {
+      this.player.audioTrack = index;
+    } else {
+      const track = this.player.getTracksFor("audio").find(track => track.index === index);
+
+      this.player.setCurrentTrack(track);
+    }
+
+    this.setState({
+      audioTracks: {
+        available: this.state.audioTracks.available,
+        current: index
+      }
+    });
+  }
+
+  SetTextTrack(index) {
+    if(this.state.protocol === "hls") {
+      this.player.subtitleTrack = index;
+    } else {
+      this.player.setTextTrack(index);
+    }
+
+    this.setState({
+      textTracks: {
+        available: this.state.textTracks.available,
+        current: index
+      }
+    });
+  }
+
   Tracks() {
     if(this.state.native || !this.player || (this.state.audioTracks.available.length <= 1 && this.state.textTracks.available.length === 0)) {
       return null;
-    }
-
-    let SetAudioTrack, SetTextTrack;
-    if(this.state.protocol === "hls") {
-      SetAudioTrack = event => {
-        this.player.audioTrack = parseInt(event.target.value);
-      };
-
-      SetTextTrack = event => {
-        const index = parseInt(event.target.value);
-        this.player.subtitleTrack = index;
-
-        this.setState({
-          textTracks: {
-            available: this.state.textTracks.available,
-            current: index
-          }
-        });
-      };
-    } else {
-      SetAudioTrack = event => {
-        const index = parseInt(event.target.value);
-
-        const track = this.player.getTracksFor("audio").find(track => track.index === index);
-
-        this.player.setCurrentTrack(track);
-
-        this.setState({
-          audioTracks: {
-            available: this.state.audioTracks.available,
-            current: index
-          }
-        });
-      };
-
-      SetTextTrack = event => {
-        const index = parseInt(event.target.value);
-
-        this.player.setTextTrack(index);
-
-        this.setState({
-          textTracks: {
-            available: this.state.textTracks.available,
-            current: index
-          }
-        });
-      };
     }
 
     let textTrackSelection;
@@ -385,7 +419,7 @@ class ActiveTitle extends React.Component {
           aria-label="Subtitle Track"
           value={this.state.textTracks.current}
           className="video-playback-control"
-          onChange={SetTextTrack}
+          onChange={event => this.SetTextTrack(parseInt(event.target.value))}
         >
           <option value={-1}>Subtitles: None</option>
           {
@@ -417,7 +451,7 @@ class ActiveTitle extends React.Component {
           aria-label="Audio Track"
           value={this.state.audioTracks.current}
           className="video-playback-control"
-          onChange={SetAudioTrack}
+          onChange={event => this.SetAudioTrack(parseInt(event.target.value))}
         >
           {
             this.state.audioTracks.available.map(({index, label}) =>
@@ -462,7 +496,7 @@ class ActiveTitle extends React.Component {
 
     return (
       <div className={`active-title-metadata ${this.state.activeTab === "Metadata" ? "" : "hidden"}`}>
-        <h2>{ this.props.siteStore.Localized(title, "title") } - Metadata</h2>
+        <h2>{ title.title } - Metadata</h2>
         <div className="metadata-path">{title.isSearchResult ? "" : this.props.siteStore.currentSite.name + " - "}{title.baseLinkPath}</div>
         <pre>
           { JSON.stringify(title.metadata, null, 2)}
@@ -476,7 +510,7 @@ class ActiveTitle extends React.Component {
 
     const titleInfo = title.info || {};
 
-    let genre = this.props.siteStore.Localized(title, "genre");
+    let genre = titleInfo.genre;
     if(!Array.isArray(genre)) {
       genre = [genre];
     }
@@ -487,10 +521,10 @@ class ActiveTitle extends React.Component {
       <div className={`active-title-details-page ${this.state.activeTab === "Details" ? "" : "hidden"}`}>
         <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl || FallbackIcon} alternateIcon={FallbackIcon} className="active-title-detail-image" title="Poster" />
         <div className="active-title-details">
-          <h2>{ this.props.siteStore.Localized(title, "title") }</h2>
+          <h2>{ title.title }</h2>
           {Maybe(
             titleInfo.synopsis,
-            () => <div className="synopsis">{ this.props.siteStore.Localized(title, "synopsis") }</div>
+            () => <div className="synopsis">{ titleInfo.synopsis }</div>
           )}
           <div className="details-section">
             {Maybe(
@@ -532,7 +566,7 @@ class ActiveTitle extends React.Component {
           {Maybe(
             titleInfo.copyright,
             () => <div className="copyright">
-              { titleInfo.copyright.toString().startsWith("©") ? "" : "©" } { this.props.siteStore.Localized(title, "copyright") }
+              { titleInfo.copyright.toString().startsWith("©") ? "" : "©" } { titleInfo.copyright}
             </div>
           )}
         </div>
@@ -545,8 +579,8 @@ class ActiveTitle extends React.Component {
 
     const title = this.props.siteStore.activeTitle;
 
-    let displayTitle = this.props.siteStore.Localized(title, "title");
-    let synopsis = this.props.siteStore.Localized(title, "synopsis");
+    let displayTitle = title.title;
+    let synopsis = (title.info || {}).synopsis;
     if(currentIndex !== undefined) {
       const program = schedule[currentIndex];
       displayTitle = program.title || displayTitle;

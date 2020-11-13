@@ -629,7 +629,6 @@ nav {
   position: absolute;
   right: 15rem;
 
-
   select {
     background: none;
     border: 1px solid $elv-color-darkgray;
@@ -638,6 +637,10 @@ nav {
     padding: 0 $elv-spacing-xs;
     text-align: center;
     width: 10rem;
+  }
+
+  option {
+    background-color: $elv-color-darkgray;
   }
 }
 

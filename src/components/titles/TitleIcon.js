@@ -67,7 +67,7 @@ class TitleIcon extends React.Component {
             alternateIcon={FallbackIcon}
           />
         </div>
-        <h4>{ this.props.siteStore.Localized(title, "title") }</h4>
+        <h4>{ title.title }</h4>
       </div>
     );
   }

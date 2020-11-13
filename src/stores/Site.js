@@ -4,22 +4,6 @@ import UrlJoin from "url-join";
 import Id from "@eluvio/elv-client-js/src/Id";
 import { v4 as UUID } from "uuid";
 
-const SafeTraverse = (object, ...keys) => {
-  if(keys.length === 1 && Array.isArray(keys[0])) {
-    keys = keys[0];
-  }
-
-  let result = object;
-
-  for(let i = 0; i < keys.length; i++){
-    result = result[keys[i]];
-
-    if(result === undefined) { return undefined; }
-  }
-
-  return result;
-};
-
 class SiteStore {
   @observable sites = [];
   @observable loading = false;
@@ -77,34 +61,50 @@ class SiteStore {
     return this.sites[0];
   }
 
-  Localized(source, field) {
-    const value = SafeTraverse(source, "info_territories", this.territory, this.language, field) ||
-      SafeTraverse(source, "info_locals", this.language, field);
-
-    if(!value || (value["."] && value["."].resolution_error)) {
-      return SafeTraverse(source, "info", field) ||
-        SafeTraverse(source, field);
-    }
-
-    return value;
-  }
-
   constructor(rootStore) {
     this.rootStore = rootStore;
+
+    window.siteStore = this;
   }
 
   @action.bound
-  SetLanguage(language) {
+  SetLanguage = flow(function * (language) {
     this.language = language;
-  }
+
+    // Wait for any previous load to finish
+    while(this.loading) {
+      yield new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    const siteId = this.siteId;
+    if(siteId) {
+      this.ClearActiveTitle();
+      this.PopSite();
+
+      yield this.LoadSite(siteId);
+    }
+  });
 
   @action.bound
-  SetTerritory(territory) {
+  SetTerritory = flow(function * (territory) {
     this.territory = territory;
 
     const territoryLanguages = this.localization.territories[territory] || [];
     this.language = territoryLanguages.includes(this.language) ? this.language : territoryLanguages[0] || "en";
-  }
+
+    // Wait for any previous load to finish
+    while(this.loading) {
+      yield new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    const siteId = this.siteId;
+    if(siteId) {
+      this.ClearActiveTitle();
+      this.PopSite();
+
+      yield this.LoadSite(siteId);
+    }
+  });
 
   @action.bound
   Reset() {
@@ -182,8 +182,10 @@ class SiteStore {
         ]
       });
 
-      this.localization.languages = siteInfo.languages || [];
-      this.localization.territories = siteInfo.territories || [];
+      if(!isSubSite) {
+        this.localization.languages = siteInfo.languages || [];
+        this.localization.territories = siteInfo.territories || [];
+      }
 
       if(!isSubSite) {
         this.searchIndex = yield this.client.ContentObjectMetadata({versionHash, metadataSubtree: "public/site_index"});
@@ -237,22 +239,24 @@ class SiteStore {
     }
   });
 
-  async ImageLinks({baseLinkUrl, versionHash, images}) {
-    images = images || {};
-
-    let landscapeUrl, portraitUrl, imageUrl;
-    if(images.landscape) {
-      landscapeUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "landscape", "default"));
-    } else if(images.main_slider_background_desktop) {
-      landscapeUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "main_slider_background_desktop", "default"));
+  async ImageLinks({images, versionHash}) {
+    if(!images) {
+      return {};
     }
 
-    if(images.poster) {
-      portraitUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "poster", "default"));
-    } else if(images.primary_portrait) {
-      portraitUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "primary_portrait", "default"));
-    } else if(images.portrait) {
-      portraitUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "portrait", "default"));
+    let landscapeUrl, portraitUrl, imageUrl;
+    if(images.landscape && images.landscape.default) {
+      landscapeUrl = images.landscape.default.url;
+    } else if(images.main_slider_background_desktop && images.main_slider_background_desktop.default) {
+      landscapeUrl = images.main_slider_background_desktop.default.url;
+    }
+
+    if(images.poster && images.poster.default) {
+      portraitUrl = images.poster.default.url;
+    } else if(images.primary_portrait && images.primary_portrait.default) {
+      portraitUrl = images.primary_portrait.default.url;
+    } else if(images.portrait && images.portrait.default) {
+      portraitUrl = images.portrait.default.url;
     }
 
     imageUrl = await this.client.ContentObjectImageUrl({versionHash});
@@ -276,11 +280,22 @@ class SiteStore {
           const titleKey = Object.keys(titleInfo[index])[0];
           let title = titleInfo[index][titleKey];
 
+          title.versionHash = title["."].source;
+
+          // Localize
+          title = await this.client.AssetMetadata({
+            versionHash: title.versionHash,
+            metadata: title,
+            localization: [
+              ["info_territories", this.territory, this.language],
+              ["info_locals", this.language]
+            ]
+          });
+
           if(title["."].resolution_error) {
             return;
           }
 
-          title.versionHash = title["."].source;
           title.objectId = this.client.utils.DecodeVersionHash(title.versionHash).objectId;
 
           title.titleId = Id.next();
@@ -290,7 +305,7 @@ class SiteStore {
           title.baseLinkPath = linkPath;
           title.baseLinkUrl = await this.client.LinkUrl({versionHash, linkPath});
 
-          Object.assign(title, await this.ImageLinks({baseLinkUrl: title.baseLinkUrl, versionHash: title.versionHash, images: title.images}));
+          Object.assign(title, await this.ImageLinks({images: title.images, versionHash: title.versionHash}));
 
           titles[index] = title;
         } catch (error) {
@@ -324,6 +339,17 @@ class SiteStore {
                 let title = list[titleSlug];
 
                 title.versionHash = title["."].source;
+
+                // Localize
+                title = await this.client.AssetMetadata({
+                  versionHash: title.versionHash,
+                  metadata: title,
+                  localization: [
+                    ["info_territories", this.territory, this.language],
+                    ["info_locals", this.language]
+                  ]
+                });
+
                 title.objectId = this.client.utils.DecodeVersionHash(title.versionHash).objectId;
 
                 const titleLinkPath = `public/asset_metadata/playlists/${playlistSlug}/list/${titleSlug}`;
@@ -335,7 +361,7 @@ class SiteStore {
 
                 title.titleId = Id.next();
 
-                Object.assign(title, await this.ImageLinks({baseLinkUrl: title.baseLinkUrl, versionHash: title.versionHash, images: title.images}));
+                Object.assign(title, await this.ImageLinks({versionHash: title.versionHash, images: title.images}));
 
                 titles[parseInt(title.order)] = title;
               } catch (error) {
@@ -480,11 +506,21 @@ class SiteStore {
         results.map(async ({id, hash, meta}) => {
           try {
             meta = ((meta || {}).public || {}).asset_metadata || {};
+
+            meta = await this.client.AssetMetadata({
+              versionHash: hash,
+              metadata: meta,
+              localization: [
+                ["info_territories", this.territory, this.language],
+                ["info_locals", this.language]
+              ]
+            });
+
             const linkPath = UrlJoin("public", "asset_metadata");
             const playoutOptionsLinkPath = UrlJoin(linkPath, "sources", "default");
             const baseLinkPath = linkPath;
             const baseLinkUrl = await this.client.LinkUrl({versionHash: hash, linkPath});
-            const imageLinks = await this.ImageLinks({baseLinkUrl, versionHash: hash, images: meta.images});
+            const imageLinks = await this.ImageLinks({versionHash: hash, images: meta.images});
 
             return {
               ...meta,
