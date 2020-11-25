@@ -580,7 +580,7 @@ class ActiveTitle extends React.Component {
     const title = this.props.siteStore.activeTitle;
 
     let displayTitle = title.title;
-    let synopsis = (title.info || {}).synopsis;
+    let synopsis = (title.info || {}).synopsis || "";
     if(currentIndex !== undefined) {
       const program = schedule[currentIndex];
       displayTitle = program.title || displayTitle;
