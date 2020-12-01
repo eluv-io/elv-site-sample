@@ -181,9 +181,15 @@ class RootStore {
   LoadAvailableSites = flow(function * () {
     const sites = yield this.FindSites();
 
-    this.availableSites = yield Promise.all(
+    this.availableSites = (yield Promise.all(
       sites.map(async siteId => {
         try {
+          const accessType = await this.client.AccessType({id: siteId});
+
+          if(accessType !== "object") {
+            return;
+          }
+
           const libraryId = await this.client.ContentObjectLibraryId({objectId: siteId});
 
           const siteName = await this.client.ContentObjectMetadata({
@@ -203,7 +209,7 @@ class RootStore {
           console.error(error);
         }
       })
-    );
+    )).filter(site => site);
   });
 
   @action.bound
