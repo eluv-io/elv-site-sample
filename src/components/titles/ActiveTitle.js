@@ -293,7 +293,11 @@ class ActiveTitle extends React.Component {
           playoutOptions.hls.playoutMethods.clear
         ).playoutUrl;
 
-        player = new HLSPlayer();
+        player = new HLSPlayer({
+          maxBufferLength: 30,
+          maxBufferSize: 300,
+          enableWorker: true
+        });
 
         player.on(HLSPlayer.Events.AUDIO_TRACK_LOADED, InitializeTracks);
 
