@@ -272,7 +272,10 @@ class ActiveTitle extends React.Component {
         this.setState({protocol: "hls"});
 
         if(!HLSPlayer.isSupported()) {
-          if(this.props.siteStore.availableDRMs.includes("fairplay")) {
+          if(
+            this.props.siteStore.availableDRMs.includes("fairplay") &&
+            playoutOptions.hls.playoutMethods.fairplay
+          ) {
             InitializeFairPlayStream({playoutOptions, video: element});
           } else {
             // Prefer AES playout
