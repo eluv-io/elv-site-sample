@@ -315,7 +315,7 @@ class SiteStore {
           title.titleId = Id.next();
 
           const linkPath = UrlJoin("public", "asset_metadata", metadataKey, index, titleKey);
-          title.playoutOptionsLinkPath = UrlJoin(linkPath, "sources");
+          title.playoutLinksPath = UrlJoin(linkPath, "sources");
           title.baseLinkPath = linkPath;
           title.baseLinkUrl = await this.client.LinkUrl({versionHash, linkPath});
 
@@ -375,7 +375,7 @@ class SiteStore {
                 title.baseLinkUrl =
                   await this.client.LinkUrl({versionHash, linkPath: titleLinkPath});
 
-                title.playoutOptionsLinkPath = UrlJoin(titleLinkPath, "sources");
+                title.playoutLinksPath = UrlJoin(titleLinkPath, "sources");
 
                 title.titleId = Id.next();
 
@@ -414,10 +414,9 @@ class SiteStore {
       this.activeTitle.currentOffering = offering;
     }
 
-    const versionHash = this.activeTitle.title.isSearchResult ? this.activeTitle.title.versionHash : this.currentSite.versionHash;
-
     try {
-      const linkPath = UrlJoin(this.activeTitle.playoutOptionsLinkPath, offering);
+      const versionHash = this.activeTitle.isSearchResult ? this.activeTitle.versionHash : this.currentSite.versionHash;
+      const linkPath = UrlJoin(this.activeTitle.playoutLinksPath, offering);
 
       let playoutOptions;
 
@@ -426,17 +425,13 @@ class SiteStore {
         playoutOptions = yield this.client.PlayoutOptions({
           versionHash,
           offering,
-          linkPath,
-          protocols: ["hls", "dash"],
-          drms: ["aes-128", "widevine", "clear"]
+          linkPath
         });
       } catch (error) {
         // If linkPath request fails, try calling the offering directly
         playoutOptions = yield this.client.PlayoutOptions({
-          versionHash,
-          offering,
-          protocols: ["hls", "dash"],
-          drms: ["aes-128", "widevine", "clear"]
+          versionHash: this.activeTitle.versionHash,
+          offering
         });
       }
 
@@ -468,17 +463,19 @@ class SiteStore {
       resolveIgnoreErrors: true
     });
 
-    let availableOfferings = { default: {display_name: "default"}, watermark: { display_name: "watermark" } };
+    let availableOfferings;
     try {
       availableOfferings = yield this.client.AvailableOfferings({
         versionHash,
-        linkPath: this.activeTitle.playoutOptionsLinkPath
+        linkPath: UrlJoin(this.activeTitle.playoutLinksPath, "default")
       });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Failed to load available offerings");
       // eslint-disable-next-line no-console
       console.error(error);
+
+      availableOfferings = { default: {display_name: "default"} };
     }
 
     const allowedOfferings = this.rootSite.allowed_offerings;
@@ -558,7 +555,7 @@ class SiteStore {
             });
 
             const linkPath = UrlJoin("public", "asset_metadata");
-            const playoutOptionsLinkPath = UrlJoin(linkPath, "sources");
+            const playoutLinksPath = UrlJoin(linkPath, "sources");
             const baseLinkPath = linkPath;
             const baseLinkUrl = await this.client.LinkUrl({versionHash: hash, linkPath});
             const imageLinks = await this.ImageLinks({versionHash: hash, images: meta.images});
@@ -570,7 +567,7 @@ class SiteStore {
               displayTitle: meta.display_title || meta.title || "",
               objectId: id,
               versionHash: hash,
-              playoutOptionsLinkPath,
+              playoutLinksPath,
               baseLinkPath,
               baseLinkUrl
             };
