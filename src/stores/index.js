@@ -16,6 +16,7 @@ class RootStore {
   @observable client;
   @observable sites = [];
   @observable availableSites = [];
+  @observable usePolicy = true;
 
   @observable libraries = {};
   @observable objects = {};
@@ -56,6 +57,12 @@ class RootStore {
       if(client.SendMessage) {
         client.SendMessage({options: {operation: "HideHeader"}, noResponse: true});
       }
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if(urlParams.get("noPolicy")) {
+      this.usePolicy = false;
     }
 
     const appPath = window.location.hash

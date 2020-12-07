@@ -108,6 +108,8 @@ class SiteStore {
 
   @action.bound
   Reset() {
+    this.rootStore.client.SetStaticToken({token: ""});
+
     this.sites = [];
 
     this.dashSupported = false;
@@ -159,6 +161,18 @@ class SiteStore {
       this.dashSupported = this.availableDRMs.includes("widevine");
 
       const versionHash = yield this.client.LatestVersionHash({objectId});
+
+      if(this.rootStore.usePolicy) {
+        // If policy ID is specified in the site, use policy authorization
+        const policyId = yield this.client.ContentObjectMetadata({
+          versionHash,
+          metadataSubtree: "public/policyId"
+        });
+
+        if(policyId) {
+          yield this.client.SetPolicyAuthorization({objectId: policyId});
+        }
+      }
 
       let siteInfo = yield this.client.ContentObjectMetadata({
         versionHash,
@@ -282,6 +296,10 @@ class SiteStore {
 
           title.versionHash = title["."].source;
 
+          if(title["."].resolution_error) {
+            return;
+          }
+
           // Localize
           title = await this.client.AssetMetadata({
             versionHash: title.versionHash,
@@ -291,10 +309,6 @@ class SiteStore {
               ["info_locals", this.language]
             ]
           });
-
-          if(title["."].resolution_error) {
-            return;
-          }
 
           title.objectId = this.client.utils.DecodeVersionHash(title.versionHash).objectId;
 
@@ -339,6 +353,10 @@ class SiteStore {
                 let title = list[titleSlug];
 
                 title.versionHash = title["."].source;
+
+                if(title["."].resolution_error) {
+                  return;
+                }
 
                 // Localize
                 title = await this.client.AssetMetadata({
