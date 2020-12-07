@@ -30,7 +30,7 @@ class TitleIcon extends React.Component {
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error("Failed to load title:");
+      console.error("Failed to set active title:");
       // eslint-disable-next-line no-console
       console.error(error);
     } finally {
