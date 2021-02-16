@@ -82,6 +82,8 @@ class RootStore {
         this.siteStore.LoadSite(initialContentId);
       }
     }
+
+    window.client = client;
   });
 
   RedeemCode = flow(function * (code) {
@@ -145,6 +147,8 @@ class RootStore {
     this.client = client;
 
     this.siteStore.LoadSite(codeInfo.sites[0].siteId);
+
+    window.client = client;
 
     return true;
   });

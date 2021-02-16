@@ -25,7 +25,7 @@
     ]
   },
   "dependencies": {
-    "@eluvio/elv-client-js": "^3.1.17",
+    "@eluvio/elv-client-js": "^3.1.41",
     "bitmovin-player": "^8.22.0",
     "dashjs": "^3.0.3",
     "elv-components-js": "git+https://github.com/eluv-io/elv-components-js.git#645165da87ec42845a908a9ce0817db202523866",
@@ -38,7 +38,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "urijs": "^1.19.1",
+    "urijs": "^1.19.6",
     "url-join": "^4.0.1",
     "uuid": "^8.1.0"
   },

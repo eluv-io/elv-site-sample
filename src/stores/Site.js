@@ -253,24 +253,24 @@ class SiteStore {
     }
   });
 
-  async ImageLinks({images, versionHash}) {
+  async ImageLinks({baseLinkUrl, images, versionHash}) {
     if(!images) {
       return {};
     }
 
     let landscapeUrl, portraitUrl, imageUrl;
     if(images.landscape && images.landscape.default) {
-      landscapeUrl = images.landscape.default.url;
+      landscapeUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "landscape", "default"));
     } else if(images.main_slider_background_desktop && images.main_slider_background_desktop.default) {
-      landscapeUrl = images.main_slider_background_desktop.default.url;
+      landscapeUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "main_slider_background_desktop", "default"));
     }
 
     if(images.poster && images.poster.default) {
-      portraitUrl = images.poster.default.url;
+      portraitUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "poster", "default"));
     } else if(images.primary_portrait && images.primary_portrait.default) {
-      portraitUrl = images.primary_portrait.default.url;
+      portraitUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "primary_portrait", "default"));
     } else if(images.portrait && images.portrait.default) {
-      portraitUrl = images.portrait.default.url;
+      portraitUrl = this.CreateLink(baseLinkUrl, UrlJoin("images", "portrait", "default"));
     }
 
     imageUrl = await this.client.ContentObjectImageUrl({versionHash});
@@ -319,7 +319,7 @@ class SiteStore {
           title.baseLinkPath = linkPath;
           title.baseLinkUrl = await this.client.LinkUrl({versionHash, linkPath});
 
-          Object.assign(title, await this.ImageLinks({images: title.images, versionHash: title.versionHash}));
+          Object.assign(title, await this.ImageLinks({baseLinkUrl: title.baseLinkUrl, images: title.images, versionHash: title.versionHash}));
 
           titles[index] = title;
         } catch (error) {
