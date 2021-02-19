@@ -418,7 +418,7 @@ class SiteStore {
       const versionHash = this.activeTitle.isSearchResult ? this.activeTitle.versionHash : this.currentSite.versionHash;
       const linkPath = UrlJoin(this.activeTitle.playoutLinksPath, offering);
 
-      let playoutOptions;
+      let playoutOptions, bitmovinPlayoutOptions;
 
       try {
         // Try with linkPath
@@ -427,17 +427,37 @@ class SiteStore {
           offering,
           linkPath
         });
+
+        bitmovinPlayoutOptions = yield this.client.BitmovinPlayoutOptions({
+          versionHash,
+          offering,
+          linkPath,
+          protocols: ["dash", "hls"],
+          drms: yield this.client.AvailableDRMs()
+        });
       } catch (error) {
         // If linkPath request fails, try calling the offering directly
         playoutOptions = yield this.client.PlayoutOptions({
           versionHash: this.activeTitle.versionHash,
           offering
         });
+
+        bitmovinPlayoutOptions = yield this.client.BitmovinPlayoutOptions({
+          versionHash: this.activeTitle.versionHash,
+          offering,
+          protocols: ["dash", "hls"],
+          drms: yield this.client.AvailableDRMs()
+        });
       }
 
       this.activeTitle.playoutOptions = {
         ...(this.activeTitle.playoutOptions || {}),
         [offering]: playoutOptions
+      };
+
+      this.activeTitle.bitmovinPlayoutOptions = {
+        ...(this.activeTitle.bitmovinPlayoutOptions || {}),
+        [offering]: bitmovinPlayoutOptions
       };
 
       this.activeTitle.currentOffering = offering;

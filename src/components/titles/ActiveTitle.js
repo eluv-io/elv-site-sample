@@ -4,93 +4,9 @@ import HLSPlayer from "hls-fix";
 import DashJS from "dashjs";
 import {inject, observer} from "mobx-react";
 import {ImageIcon} from "elv-components-js";
-import {DateTime} from "luxon";
 
 import FallbackIcon from "../../static/icons/video.svg";
 import {InitializeFairPlayStream} from "../../FairPlay";
-
-@inject("siteStore")
-@observer
-class ChannelSchedule extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      startIndex: props.currentIndex || 0,
-      visible: 5,
-    };
-  }
-
-  ProgramIcon(program, index) {
-    const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    const thumbnail = this.props.siteStore.CreateLink(
-      this.props.siteStore.activeTitle.baseLinkUrl,
-      `channel_info/schedule/daily_schedules/${this.props.date}/${index}/program_image/thumbnail`,
-      { height: Math.floor(vh / 2) }
-    );
-
-    const visible = index >= this.state.startIndex
-      && index < this.state.startIndex + this.state.visible;
-
-    const startTime = DateTime.fromMillis(program.start_time_epoch).toLocaleString(DateTime.TIME_SIMPLE);
-
-    return (
-      <div
-        key={`title-${index}-${program.title}`}
-        className={`title ${visible ? "" : "hidden-title"}`}
-      >
-        <div className="ar-container">
-          { index === this.props.currentIndex ? <div className="current-program-indicator" /> : null }
-          <div className="title-vignette" />
-          <ImageIcon
-            className="title-image"
-            icon={thumbnail}
-            alternateIcon={FallbackIcon}
-          />
-        </div>
-        <h4>{program.title} - {startTime}</h4>
-      </div>
-    );
-  }
-
-  render() {
-    if(!this.props.schedule) { return null; }
-
-    const showLeft = this.state.startIndex !== 0;
-    const showRight = this.state.startIndex + this.state.visible < this.props.schedule.length;
-
-    return (
-      <div className="title-reel-container channel-schedule-reel">
-        <h3 className="title-reel-header">Schedule</h3>
-        <div className="title-reel">
-          <div
-            className={`reel-arrow reel-arrow-left ${showLeft ? "" : "hidden"}`}
-            onClick={event => {
-              event.stopPropagation();
-              this.setState({startIndex: this.state.startIndex - 1});
-            }}
-          >
-            ➢
-          </div>
-
-          <div className="title-reel-titles">
-            { this.props.schedule.map((program, i) => this.ProgramIcon(program, i)) }
-          </div>
-
-          <div
-            className={`reel-arrow reel-arrow-right ${showRight ? "" : "hidden"}`}
-            onClick={event => {
-              event.stopPropagation();
-              this.setState({startIndex: this.state.startIndex + 1});
-            }}
-          >
-            ➢
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
 
 @inject("siteStore")
 @observer
@@ -98,7 +14,10 @@ class ActiveTitle extends React.Component {
   constructor(props) {
     super(props);
 
+    const hasLocalization = Object.keys(this.props.siteStore.localization.territories).length > 0;
+
     this.state = {
+      useBitmovin: !hasLocalization,
       protocol: "dash",
       native: false,
       audioTracks: {
@@ -115,6 +34,7 @@ class ActiveTitle extends React.Component {
     };
 
     this.InitializeVideo = this.InitializeVideo.bind(this);
+    this.InitializeBitmovinVideo = this.InitializeBitmovinVideo.bind(this);
   }
 
   componentWillMount() {
@@ -154,30 +74,38 @@ class ActiveTitle extends React.Component {
     );
   }
 
-  Schedule() {
-    return {};
+  async InitializeBitmovinVideo(element) {
+    if(!element) { return; }
 
-    // eslint-disable-next-line no-unreachable
-    const channel = this.props.siteStore.activeTitle;
-    const date = DateTime.local().toFormat("yyyyLLdd");
+    this.DestroyPlayer();
 
-    if(!channel.channel_info || !channel.channel_info.schedule || !channel.channel_info.schedule.daily_schedules) {
-      return { date };
+    try {
+      const configuration = {
+        key: EluvioConfiguration["bitmovinLicenseKey"],
+        playback: {
+          muted: false,
+          autoplay: true,
+        }
+      };
+
+      const offering = this.props.siteStore.activeTitle.currentOffering;
+      let playoutOptions = this.props.siteStore.activeTitle.bitmovinPlayoutOptions;
+
+      if(!offering || !playoutOptions || !playoutOptions[offering]) {
+        return;
+      }
+
+      playoutOptions = playoutOptions[offering];
+
+      const player = new bitmovin.player.Player(element, configuration);
+
+      await player.load({...playoutOptions});
+
+      this.player = player;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
-
-    const schedule = channel.channel_info.schedule.daily_schedules[date] || [];
-
-    const now = DateTime.local().ts;
-    const currentIndex = schedule.findIndex(program =>
-      program.start_time_epoch <= now &&
-      (program.start_time_epoch + program.duration_sec * 1000) >= now
-    );
-
-    return {
-      schedule,
-      currentIndex: currentIndex >= 0 ? currentIndex : undefined,
-      date
-    };
   }
 
   InitializeVideo(element) {
@@ -362,7 +290,7 @@ class ActiveTitle extends React.Component {
       );
 
       if(defaultTextTrackIndex) {
-        this.SetAudioTrack(defaultTextTrackIndex);
+        this.SetTextTrack(defaultTextTrackIndex);
       }
     }
 
@@ -384,6 +312,8 @@ class ActiveTitle extends React.Component {
   }
 
   SetAudioTrack(index) {
+    index = parseInt(index);
+
     if(this.state.protocol === "hls") {
       this.player.audioTrack = index;
     } else {
@@ -583,28 +513,31 @@ class ActiveTitle extends React.Component {
   }
 
   VideoPage() {
-    const { schedule, currentIndex, date } = this.Schedule();
-
     const title = this.props.siteStore.activeTitle;
 
     let displayTitle = title.title;
     let synopsis = (title.info || {}).synopsis || "";
-    if(currentIndex !== undefined) {
-      const program = schedule[currentIndex];
-      displayTitle = program.title || displayTitle;
-      synopsis = program.description !== undefined ? program.description : synopsis;
-    }
 
     // Include poster image to pre-load it for details page
     return (
       <div className={`active-title-video-page ${this.state.activeTab === "Video" ? "" : "hidden"}`}>
         <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl} className="hidden" />
-        <video
-          key={`active-title-video-${title.titleId}-${title.currentOffering}`}
-          ref={this.InitializeVideo}
-          autoPlay
-          controls={this.state.showControls}
-        />
+
+        {
+          this.state.useBitmovin ?
+            <div
+              className="video"
+              key={`active-title-video-${title.titleId}-${title.currentOffering}`}
+              ref={this.InitializeBitmovinVideo}
+            /> :
+            <video
+              key={`active-title-video-${title.titleId}-${title.currentOffering}`}
+              ref={this.InitializeVideo}
+              autoPlay
+              controls={this.state.showControls}
+            />
+        }
+
         <div className="video-info">
           <div className="video-options">
             { this.Tracks() }
@@ -616,11 +549,6 @@ class ActiveTitle extends React.Component {
           <div className="synopsis">
             { synopsis.toString() }
           </div>
-          <ChannelSchedule
-            schedule={schedule}
-            date={date}
-            currentIndex={currentIndex}
-          />
         </div>
       </div>
     );

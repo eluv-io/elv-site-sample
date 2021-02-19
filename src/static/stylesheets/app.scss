@@ -446,6 +446,7 @@ nav {
     width: 100%;
   }
 
+  .video,
   video {
     background-color: $elv-color-black;
     border-radius: 0.5rem;
@@ -461,6 +462,10 @@ nav {
       min-width: 100%;
       width: 100%;
     }
+  }
+
+  .bmpui-ui-watermark {
+    display: none;
   }
 
   .video-info {
