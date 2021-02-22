@@ -85,7 +85,32 @@ class ActiveTitle extends React.Component {
         playback: {
           muted: false,
           autoplay: true,
-        }
+        },
+        tweaks: {
+          RESTART_THRESHOLD: 0.2,
+          RESTART_THRESHOLD_DELTA: 0.05,
+          STARTUP_THRESHOLD: 0.2,
+          STARTUP_THRESHOLD_DELTA: 0.05,
+          END_OF_BUFFER_TOLERANCE: 0.05,
+          LIVE_EDGE_DISTANCE: 0.5,
+          LOW_LATENCY_BUFFER_GUARD: 0.8,
+          CHUNKED_CMAF_STREAMING: true,
+        },
+        live: {
+          lowLatency: {
+            targetLatency: 3,
+            catchup: {
+              playbackRateThreshold: 0.075,
+              seekThreshold: 5,
+              playbackRate: 1.2,
+            },
+            fallback: {
+              playbackRateThreshold: 0.075,
+              seekThreshold: 5,
+              playbackRate: 0.95,
+            },
+          },
+        },
       };
 
       const offering = this.props.siteStore.activeTitle.currentOffering;
