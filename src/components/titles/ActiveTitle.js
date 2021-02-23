@@ -14,10 +14,7 @@ class ActiveTitle extends React.Component {
   constructor(props) {
     super(props);
 
-    const hasLocalization = Object.keys(this.props.siteStore.localization.territories).length > 0;
-
     this.state = {
-      useBitmovin: !hasLocalization,
       protocol: "dash",
       native: false,
       audioTracks: {
@@ -360,6 +357,22 @@ class ActiveTitle extends React.Component {
     });
   }
 
+  PlayerSelection() {
+    if(this.props.siteStore.hasLocalization) { return; }
+
+    return (
+      <select
+        aria-label="Player Selection"
+        value={this.props.siteStore.bitmovinEnabled}
+        className="video-playback-control"
+        onChange={event => this.props.siteStore.ToggleBitmovin(event.target.value === "true")}
+      >
+        <option value="false">hls.js / dash.js</option>
+        <option value="true">Bitmovin</option>
+      </select>
+    );
+  }
+
   Tracks() {
     if(this.state.native || !this.player || (this.state.audioTracks.available.length <= 1 && this.state.textTracks.available.length === 0)) {
       return null;
@@ -539,7 +552,7 @@ class ActiveTitle extends React.Component {
         <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl} className="hidden" />
 
         {
-          this.state.useBitmovin ?
+          this.props.siteStore.useBitmovin ?
             <div
               className="video"
               key={`active-title-video-${title.titleId}-${title.currentOffering}`}
@@ -555,6 +568,7 @@ class ActiveTitle extends React.Component {
 
         <div className="video-info">
           <div className="video-options">
+            { this.PlayerSelection() }
             { this.Tracks() }
             { this.Offerings() }
           </div>

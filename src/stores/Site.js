@@ -15,6 +15,8 @@ class SiteStore {
     languages: []
   };
 
+  @observable bitmovinEnabled = false;
+
   @observable territory = "U.S.A.";
   @observable language = "en";
 
@@ -59,6 +61,19 @@ class SiteStore {
 
   @computed get rootSite() {
     return this.sites[0];
+  }
+
+  @computed get hasLocalization() {
+    return Object.keys(this.localization.territories).length > 0;
+  }
+
+  @computed get useBitmovin() {
+    return this.bitmovinEnabled && !this.hasLocalization;
+  }
+
+  @action.bound
+  ToggleBitmovin(enable) {
+    this.bitmovinEnabled = enable;
   }
 
   constructor(rootStore) {
