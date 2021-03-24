@@ -434,35 +434,51 @@ class SiteStore {
       const linkPath = UrlJoin(this.activeTitle.playoutLinksPath, offering);
 
       let playoutOptions, bitmovinPlayoutOptions;
-
       try {
         // Try with linkPath
         playoutOptions = yield this.client.PlayoutOptions({
           versionHash,
           offering,
-          linkPath
+          linkPath,
+          handler: this.activeTitle.isChannel ? "channel" : "playout"
         });
 
         bitmovinPlayoutOptions = yield this.client.BitmovinPlayoutOptions({
           versionHash,
           offering,
           linkPath,
-          protocols: ["dash", "hls"],
-          drms: yield this.client.AvailableDRMs()
+          handler: this.activeTitle.isChannel ? "channel" : "playout",
+          protocols: this.activeTitle.isChannel ? ["hls"] : ["dash", "hls"],
+          drms: this.activeTitle.isChannel ? ["clear"] : yield this.client.AvailableDRMs()
         });
       } catch (error) {
+        yield this.client.SetNodes({
+          fabricURIs: ["https://host-38-102-0-227.contentfabric.io"]
+        });
+
         // If linkPath request fails, try calling the offering directly
         playoutOptions = yield this.client.PlayoutOptions({
           versionHash: this.activeTitle.versionHash,
-          offering
+          offering,
+          handler: this.activeTitle.isChannel ? "channel" : "playout"
         });
 
         bitmovinPlayoutOptions = yield this.client.BitmovinPlayoutOptions({
           versionHash: this.activeTitle.versionHash,
           offering,
-          protocols: ["dash", "hls"],
-          drms: yield this.client.AvailableDRMs()
+          handler: this.activeTitle.isChannel ? "channel" : "playout",
+          protocols: this.activeTitle.isChannel ? ["hls"] : ["dash", "hls"],
+          drms: this.activeTitle.isChannel ? ["clear"] : yield this.client.AvailableDRMs()
         });
+
+        yield this.client.ResetRegion();
+
+        // For channels, only allow clear playout
+        if(this.activeTitle.isChannel) {
+          playoutOptions.hls.playoutMethods = {
+            clear: playoutOptions.hls.playoutMethods.clear
+          };
+        }
       }
 
       this.activeTitle.playoutOptions = {
@@ -498,11 +514,16 @@ class SiteStore {
       resolveIgnoreErrors: true
     });
 
+    this.activeTitle.isChannel = yield this.rootStore.client.ContentObjectMetadata({
+      versionHash: this.activeTitle.versionHash,
+      metadataSubtree: "public/channel"
+    });
+
     let availableOfferings;
     try {
       availableOfferings = yield this.client.AvailableOfferings({
-        versionHash,
-        linkPath: UrlJoin(this.activeTitle.playoutLinksPath, "default")
+        versionHash: this.activeTitle.versionHash,
+        handler: this.activeTitle.isChannel ? "channel" : "playout"
       });
     } catch (error) {
       // eslint-disable-next-line no-console

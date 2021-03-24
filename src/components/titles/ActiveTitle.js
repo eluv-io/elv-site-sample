@@ -148,9 +148,8 @@ class ActiveTitle extends React.Component {
       };
 
       let player;
-      if(this.props.siteStore.dashSupported && playoutOptions.dash) {
+      if(this.props.siteStore.dashSupported && playoutOptions.dash && !this.props.siteStore.activeTitle.isChannel) {
         // DASH
-
         this.setState({protocol: "dash"});
 
         player = DashJS.MediaPlayer().create();
@@ -208,7 +207,6 @@ class ActiveTitle extends React.Component {
         player.initialize(element, playoutUrl);
       } else {
         // HLS
-
         this.setState({protocol: "hls"});
 
         if(!HLSPlayer.isSupported()) {
