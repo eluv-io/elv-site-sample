@@ -452,10 +452,6 @@ class SiteStore {
           drms: this.activeTitle.isChannel ? ["clear"] : yield this.client.AvailableDRMs()
         });
       } catch (error) {
-        yield this.client.SetNodes({
-          fabricURIs: ["https://host-38-102-0-227.contentfabric.io"]
-        });
-
         // If linkPath request fails, try calling the offering directly
         playoutOptions = yield this.client.PlayoutOptions({
           versionHash: this.activeTitle.versionHash,
@@ -470,15 +466,13 @@ class SiteStore {
           protocols: this.activeTitle.isChannel ? ["hls"] : ["dash", "hls"],
           drms: this.activeTitle.isChannel ? ["clear"] : yield this.client.AvailableDRMs()
         });
+      }
 
-        yield this.client.ResetRegion();
-
-        // For channels, only allow clear playout
-        if(this.activeTitle.isChannel) {
-          playoutOptions.hls.playoutMethods = {
-            clear: playoutOptions.hls.playoutMethods.clear
-          };
-        }
+      // For channels, only allow clear playout
+      if(this.activeTitle.isChannel) {
+        playoutOptions.hls.playoutMethods = {
+          clear: playoutOptions.hls.playoutMethods.clear
+        };
       }
 
       this.activeTitle.playoutOptions = {
