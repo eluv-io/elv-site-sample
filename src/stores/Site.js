@@ -524,7 +524,9 @@ class SiteStore {
       console.error("Failed to load available offerings");
       // eslint-disable-next-line no-console
       console.error(error);
+    }
 
+    if(!availableOfferings || Object.keys(availableOfferings.length === 0)) {
       availableOfferings = { default: {display_name: "default"} };
     }
 
