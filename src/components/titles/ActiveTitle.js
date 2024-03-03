@@ -541,8 +541,15 @@ class ActiveTitle extends React.Component {
   VideoPage() {
     const title = this.props.siteStore.activeTitle;
 
+    // console.log("video page title", title);
+    // console.log("video page titles for serires", title.titles);
+
     let displayTitle = title.title;
     let synopsis = (title.info || {}).synopsis || "";
+
+    // console.log("display title", displayTitle);
+    // console.log("current offering", title.currentOffering);
+    // console.log("imgurl", title.imageUrl);
 
     // Include poster image to pre-load it for details page
     return (
@@ -583,6 +590,8 @@ class ActiveTitle extends React.Component {
 
   render() {
     if(!this.props.siteStore.activeTitle) { return null; }
+
+    // console.log("active title", this.props.siteStore.activeTitle);
 
     return (
       <div className="active-title">

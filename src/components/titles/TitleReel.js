@@ -5,6 +5,7 @@ import TitleIcon from "./TitleIcon";
 
 @inject("siteStore")
 @observer
+
 class TitleReel extends React.Component {
   constructor(props) {
     super(props);

@@ -29,6 +29,8 @@ class Site extends React.Component {
         </LoadingElement>
       );
     }
+    // console.log( "seasons", this.props.siteStore.currentSite.seasons);
+    // console.log( "series", this.props.siteStore.currentSite.series);
 
     return (
       <React.Fragment>
@@ -88,6 +90,7 @@ class Site extends React.Component {
     if(!this.props.siteStore.currentSite) { return null; }
 
     const mainSiteName = this.props.siteStore.sites[0].name;
+    // console.log(mainSiteName);
     const subHeader = this.props.siteStore.sites.slice(1).map(site => site.name).join(" - ");
 
     return (

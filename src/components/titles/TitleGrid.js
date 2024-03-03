@@ -10,6 +10,8 @@ class TitleGrid extends React.Component {
     const noTitles = (!this.props.titles || this.props.titles.length === 0);
     if(!this.props.noTitlesMessage && noTitles) { return null; }
 
+    // console.log(this.props);
+
     return (
       <div className="title-container title-grid-container">
         <h3 className="title-grid-header">{ this.props.name }</h3>

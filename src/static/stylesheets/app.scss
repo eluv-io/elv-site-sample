@@ -300,6 +300,10 @@ nav {
   }
 }
 
+.title-grid-titles,  .title-reel-titles {
+  gap: 10px;
+}
+
 .title-grid-titles {
   display: grid;
   grid-row-gap: $elv-spacing-m;
@@ -307,6 +311,7 @@ nav {
 
   .title {
     min-width: 100%;
+    // max-width: 25%;
 
     &:nth-child(4n + 1) {
       .ar-container {
@@ -334,8 +339,11 @@ nav {
   cursor: pointer;
   display: flex;
   flex-grow: 1;
+  align-items: center;
   justify-content: center;
-  position: relative;
+  flex-direction: column;
+
+  // position: absolute;
   transition: flex-grow 0.6s ease-in-out, padding 0.4s ease-in-out;
 
   &:first-child {
@@ -424,9 +432,9 @@ nav {
     margin: 0;
     opacity: 1;
     padding: $elv-spacing-xxs $elv-spacing-xs;
-    position: absolute;
+    // position: absolute;
     transition: opacity 0.2s ease-in;
-    z-index: 11;
+    // z-index: 11;
   }
 }
 

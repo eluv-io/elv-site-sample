@@ -1,4 +1,5 @@
 import "./static/stylesheets/app.scss";
+import "dotenv/config";
 
 import React from "react";
 import {render} from "react-dom";

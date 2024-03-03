@@ -21,10 +21,11 @@ class TitleIcon extends React.Component {
   async PlayTitle(title) {
     try {
       this.setState({loading: true});
-
+      //console.log(props);
       // Clicked 'title' is actually a collection
       if(["site", "series", "season"].includes(title.title_type)) {
         this.props.siteStore.LoadSite(title.objectId);
+
       } else {
         await this.props.siteStore.SetActiveTitle(title);
       }
@@ -40,6 +41,7 @@ class TitleIcon extends React.Component {
 
   render() {
     const title = this.props.title;
+    // console.log(title.title, title);
 
     const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
@@ -67,7 +69,9 @@ class TitleIcon extends React.Component {
             alternateIcon={FallbackIcon}
           />
         </div>
-        <h4>{ title.title }</h4>
+        <div>
+          <h4>{ title.title }</h4>
+        </div>
       </div>
     );
   }
