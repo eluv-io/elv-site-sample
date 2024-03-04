@@ -178,11 +178,13 @@ class SiteStore {
       const versionHash = yield this.client.LatestVersionHash({objectId});
 
       if(this.rootStore.usePolicy) {
+        // console.log("sw", this.rootStore.usePolicy);
         // If policy ID is specified in the site, use policy authorization
         const policyId = yield this.client.ContentObjectMetadata({
           versionHash,
           metadataSubtree: "public/policyId"
         });
+        // console.log(policyId);
 
         if(policyId) {
           yield this.client.SetPolicyAuthorization({objectId: policyId});

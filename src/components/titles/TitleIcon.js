@@ -50,13 +50,15 @@ class TitleIcon extends React.Component {
       "",
       { height: Math.max(150, Math.floor(vh / 3)) }
     );
+    // console.log("tiitle", title.title);
 
     return (
       <div
         className={`title ${this.props.visible ? "" : "hidden-title"}`}
         onClick={() => this.PlayTitle(title)}
+        // onMouseOut={event => event.target.pause()}
       >
-        <div className="ar-container">
+        <div class="ar-container">
           <LoadingElement
             loadingClassname="title-loading-indicator"
             loading={this.state.loading}
@@ -69,8 +71,8 @@ class TitleIcon extends React.Component {
             alternateIcon={FallbackIcon}
           />
         </div>
-        <div>
-          <h4>{ title.title }</h4>
+        <div className="title-header">
+          <h4> { title.title } </h4>
         </div>
       </div>
     );

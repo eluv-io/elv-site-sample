@@ -43,7 +43,7 @@ class RootStore {
     // const buff = Buffer.from(privateKey).toString('base64');
     // console.log(buff);
 
-    const dotenv = require("dotenv").config();
+    //  const dotenv = require("dotenv").config();
     // const variableExpansion = require('dotenv-expand')
     // console.log(dotenv);
     // variableExpansion(myEnv)

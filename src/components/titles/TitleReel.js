@@ -39,11 +39,11 @@ class TitleReel extends React.Component {
           <div className="title-reel-titles">
             {
               this.props.titles.map((title, index) => (
-                <TitleIcon
-                  key={`title-reel-title-${this.props.name}-${index}`}
-                  title={title}
-                  visible={index >= this.state.startIndex && index < this.state.startIndex + this.state.visible}
-                />
+                  <TitleIcon
+                    key={`title-reel-title-${this.props.name}-${index}`}
+                    title={title}
+                    visible={index >= this.state.startIndex && index < this.state.startIndex + this.state.visible}
+                  />
               ))
             }
           </div>

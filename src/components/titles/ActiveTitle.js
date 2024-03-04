@@ -457,14 +457,21 @@ class ActiveTitle extends React.Component {
 
   MetadataPage() {
     const title = this.props.siteStore.activeTitle;
+    console.log(title);
 
     return (
-      <div className={`active-title-metadata ${this.state.activeTab === "Metadata" ? "" : "hidden"}`}>
-        <h2>{ title.title } - Metadata</h2>
-        <div className="metadata-path">{title.isSearchResult ? "" : this.props.siteStore.currentSite.name + " - "}{title.baseLinkPath}</div>
-        <pre>
-          { JSON.stringify(title.metadata, null, 2)}
-        </pre>
+      <div className="active-title-metadata">
+        <div className="metadata-path">
+          <p>Media Object ID: <span>{ title.objectId }</span></p>
+          <p>Latest Version Hash: <span>{ title.versionHash }</span></p>
+          {/* {title.isSearchResult ? "" : this.props.siteStore.currentSite.name + " - "}{title.baseLinkPath} */}
+        </div>
+        <div className="metadata-code">
+          <p>Object Metadata <span>{ title.baseLinkPath }</span></p>
+          <pre>
+            { JSON.stringify(title.metadata, null, 2)}
+          </pre>
+        </div>
       </div>
     );
   }
@@ -482,14 +489,10 @@ class ActiveTitle extends React.Component {
     const Maybe = (value, render) => value ? render() : null;
 
     return (
-      <div className={`active-title-details-page ${this.state.activeTab === "Details" ? "" : "hidden"}`}>
-        <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl || FallbackIcon} alternateIcon={FallbackIcon} className="active-title-detail-image" title="Poster" />
+      <>
+      <div className="active-title-details-page">
         <div className="active-title-details">
-          <h2>{ title.title }</h2>
-          {Maybe(
-            titleInfo.synopsis,
-            () => <div className="synopsis">{ titleInfo.synopsis }</div>
-          )}
+          <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl || FallbackIcon} alternateIcon={FallbackIcon} className="active-title-detail-image" title="Poster" />
           <div className="details-section">
             {Maybe(
               titleInfo.talent && titleInfo.talent.cast,
@@ -534,7 +537,9 @@ class ActiveTitle extends React.Component {
             </div>
           )}
         </div>
+        { this.MetadataPage() }
       </div>
+      </>
     );
   }
 
@@ -553,7 +558,7 @@ class ActiveTitle extends React.Component {
 
     // Include poster image to pre-load it for details page
     return (
-      <div className={`active-title-video-page ${this.state.activeTab === "Video" ? "" : "hidden"}`}>
+      <div className="active-title-video-page" >
         <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl} className="hidden" />
 
         {
@@ -572,16 +577,18 @@ class ActiveTitle extends React.Component {
         }
 
         <div className="video-info">
+          <div className="video-info-text">
+            <h3>
+              { displayTitle.toString() }
+            </h3>
+            <div className="synopsis">
+              <p>{ synopsis.toString() }</p>
+            </div>
+          </div>
           <div className="video-options">
             { this.PlayerSelection() }
             { this.Tracks() }
             { this.Offerings() }
-          </div>
-          <h4>
-            { displayTitle.toString() }
-          </h4>
-          <div className="synopsis">
-            { synopsis.toString() }
           </div>
         </div>
       </div>
@@ -595,10 +602,12 @@ class ActiveTitle extends React.Component {
 
     return (
       <div className="active-title">
-        { this.Tabs() }
-        { this.VideoPage() }
-        { this.DetailsPage() }
-        { this.MetadataPage() }
+        {/* { this.Tabs() } */}
+        <div className="active-title-info-container">
+          { this.VideoPage() }
+          { this.DetailsPage() }
+        </div>
+        {/* { this.MetadataPage() } */}
       </div>
     );
   }
