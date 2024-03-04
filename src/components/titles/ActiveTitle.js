@@ -487,14 +487,14 @@ class ActiveTitle extends React.Component {
         <div className="active-title-details">
           <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl || FallbackIcon} alternateIcon={FallbackIcon} className="active-title-detail-image" title="Poster" />
           <div className="details-section">
-              <div className="detail">
-                <label>Object ID</label>
-                <p>{ title.objectId }</p>
-              </div>
-              <div className="detail">
-                <label>Version Hash</label>
-                <p>{ title.versionHash }</p>
-              </div>
+            <div className="detail">
+              <label>Object ID</label>
+              <p>{ title.objectId }</p>
+            </div>
+            <div className="detail">
+              <label>Version Hash</label>
+              <p>{ title.versionHash }</p>
+            </div>
             {Maybe(
               titleInfo.talent && titleInfo.talent.cast,
               () => <div className="detail">
