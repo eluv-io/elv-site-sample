@@ -25,7 +25,7 @@
   }
   li {
     // @include elv-ellipsis;
-    background-color: transparent;
+    background-color: #c8cfd8;
     border: 1px solid #8f9cab;
     border-radius: $elv-spacing-xs;
     color: #000;
@@ -50,7 +50,7 @@
     &:hover {
       background-color: #8f9cab;
       border: 1px solid #8f9cab;
-      color: #fff;
+      // color: #fff;
     }
   }
 }

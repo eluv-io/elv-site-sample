@@ -36,7 +36,7 @@ html {
 
 .app {
   // background: linear-gradient(305deg, darken($elv-color-darkblue, 15%), darken($elv-color-darkblue, 12%), darken($elv-color-darkblue, 20%));
-  background: #fff;
+  background: #F7F9FC;
 }
 
 html,
@@ -76,13 +76,13 @@ header {
   display: flex;
   max-height: $header-height;
   // min-height: $header-height;
-  min-height: 4.5rem;
+  min-height: 5.5rem;
   position: relative;
   background-color: #15141d;
   width: 100%;
   padding: 0 $elv-spacing-l;
 
-  h2 {
+  h3 {
     font-family: $main-font;
     color: $text-color;
   }
@@ -93,7 +93,7 @@ header {
     min-height: 100%;
     width: auto;
     height: 40px;
-    margin-right: 1rem;
+    margin-right: 1.75rem;
     // filter: invert(100%);
   }
 }
@@ -198,7 +198,10 @@ nav {
   // position: relative;
   // text-align: center;
   margin: 0.5rem 0;
-  h4, svg {
+  p {
+    margin: 0.6rem 0;
+  }
+  p, svg {
     color: #000;
 
     &.back-button {
@@ -267,7 +270,7 @@ nav {
   border-top: 2px solid #000;
   // font-size: 1.6rem;
   margin: $elv-spacing-s 0;
-  padding: $elv-spacing-s $elv-spacing-s 0;
+  padding: $elv-spacing-s;
   width: 100%;
   color: #000;
 
@@ -278,7 +281,7 @@ nav {
 }
 
 .title-grid-container {
-  margin-bottom: $elv-spacing-m;
+  margin-bottom: 2.5rem;
 }
 
 .title-reel {
@@ -399,7 +402,7 @@ nav {
     // justify-content: center;
     flex-wrap: wrap;
     // border: 1px solid #fff;
-    background-color: #8f9cab;
+    background-color: #c8cfd8;
     // padding: 1rem;
     height: 4rem;
     border-radius: 0.2rem;
@@ -526,9 +529,31 @@ nav {
 
     .active-title-details-page {
       width: 40%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin: 0rem 1rem;
+      flex-direction: column;
+
+      .active-title-detail-image {
+        height: auto;
+        // max-height: 70vh;
+        // object-fit: contain;
+        // object-position: right;
+        width: 55%;
+      }
+
+      svg {
+        fill: $elv-color-darkblue;
+        stroke: none;
+      }
     }
     .active-title-video-page {
       width: 60%;
+      align-items: center;
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
     }
 
   }
@@ -599,44 +624,10 @@ nav {
 
   .synopsis {
     align-self: center;
-    color: #8f9cab;
+    color: #979797;
     max-height: 50%;
     // text-align: center;
   }
-}
-
-.active-title-details-page {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  margin: 0rem 1rem;
-  flex-direction: column;
-  // display: grid;
-  // grid-template-columns: minmax(auto, 30%) 1fr;
-  // height: auto;
-  // padding: $elv-spacing-m 0;
-  width: 100%;
-
-  .active-title-detail-image {
-    height: auto;
-    // max-height: 70vh;
-    // object-fit: contain;
-    // object-position: right;
-    width: 55%;
-  }
-
-  svg {
-    fill: $elv-color-darkblue;
-    stroke: none;
-  }
-}
-
-.active-title-video-page {
-  align-items: center;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  // width: 100%;
 }
 
 .active-title-details {
@@ -689,18 +680,25 @@ nav {
     margin: $elv-spacing-xs;
     // margin-bottom: $elv-spacing-xs;
 
+    p {
+      color: #000;
+      @include elv-ellipsis;
+      margin: 0.2rem;
+    }
+    
+
     * {
       line-height: $elv-spacing-s;
       // padding: $elv-spacing-xs 0;
     }
 
     label {
-      color: $elv-color-mediumgray;
+      color: #979797;
     }
   }
 
   .copyright {
-    color: $elv-color-text-lighter;
+    color: #979797;
   }
 }
 
@@ -726,33 +724,35 @@ nav {
       margin: 0.4rem 0;
 
       span {
-        background-color: #b5b7b9;
+        background-color: #dde0e3;
         padding: 0.1rem;
         border-radius: 0.5rem;
       }
     }
   }
   .metadata-code  {
-    height: 13rem;
+    height: 80%;
     @include elv-ellipsis;
     // margin: $elv-spacing-s 0;
     font-family: $elv-font-monospace;
     font-size: 0.8rem;
     width: 100%;
+    overflow: visible;
     p {
       margin: 0.4rem 0;
 
       span {
-        background-color: #b5b7b9;
+        background-color: #dde0e3;
         padding: 0.1rem;
         border-radius: 0.5rem;
       }
     }
     
     pre {
-      background: $elv-color-bg-dark;
+      background: #8f8d94;
       border: 0;
       margin: $elv-spacing-s auto;
+      border-radius: 0.5rem;
       // max-height: 55vh;
       // overflow-y: hidden;
       // width: 85%;

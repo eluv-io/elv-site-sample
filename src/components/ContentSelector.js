@@ -1,10 +1,10 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
-import {AsyncComponent, IconButton, ImageIcon, onEnterPressed} from "elv-components-js";
+import {AsyncComponent, onEnterPressed} from "elv-components-js";
 
-import BackIcon from "../static/icons/back.svg";
-import PageBack from "../static/icons/Backward.svg";
-import PageForward from "../static/icons/Forward.svg";
+// import BackIcon from "../static/icons/back.svg";
+// import PageBack from "../static/icons/Backward.svg";
+// import PageForward from "../static/icons/Forward.svg";
 
 @inject("rootStore")
 @inject("siteStore")

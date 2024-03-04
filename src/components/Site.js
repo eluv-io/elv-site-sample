@@ -90,7 +90,7 @@ class Site extends React.Component {
           icon={backIcon}
           onClick={backAction}
         />
-        <h4 onClick={backAction}> {backText} </h4>
+        <p onClick={backAction}> {backText} </p>
       </>
     );
   }

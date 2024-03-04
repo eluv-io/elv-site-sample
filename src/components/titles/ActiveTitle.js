@@ -460,13 +460,7 @@ class ActiveTitle extends React.Component {
 
     return (
       <div className="active-title-metadata">
-        <div className="metadata-path">
-          <p>Media Object ID: <span>{ title.objectId }</span></p>
-          <p>Latest Version Hash: <span>{ title.versionHash }</span></p>
-          {/* {title.isSearchResult ? "" : this.props.siteStore.currentSite.name + " - "}{title.baseLinkPath} */}
-        </div>
         <div className="metadata-code">
-          <p>Object Metadata <span>{ title.baseLinkPath }</span></p>
           <pre>
             { JSON.stringify(title.metadata, null, 2)}
           </pre>
@@ -480,10 +474,10 @@ class ActiveTitle extends React.Component {
 
     const titleInfo = title.info || {};
 
-    let genre = titleInfo.genre;
-    if(!Array.isArray(genre)) {
-      genre = [genre];
-    }
+    // let genre = titleInfo.genre;
+    // if(!Array.isArray(genre)) {
+    //   genre = [genre];
+    // }
 
     const Maybe = (value, render) => value ? render() : null;
 
@@ -493,46 +487,54 @@ class ActiveTitle extends React.Component {
         <div className="active-title-details">
           <ImageIcon icon={title.portraitUrl || title.imageUrl || title.landscapeUrl || FallbackIcon} alternateIcon={FallbackIcon} className="active-title-detail-image" title="Poster" />
           <div className="details-section">
+              <div className="detail">
+                <label>Object ID</label>
+                <p>{ title.objectId }</p>
+              </div>
+              <div className="detail">
+                <label>Version Hash</label>
+                <p>{ title.versionHash }</p>
+              </div>
             {Maybe(
               titleInfo.talent && titleInfo.talent.cast,
               () => <div className="detail">
                 <label>Cast</label>
-                { titleInfo.talent.cast.map(actor => `${actor.talent_first_name} ${actor.talent_last_name}`).join(", ") }
+                <p>{ titleInfo.talent.cast.map(actor => `${actor.talent_first_name} ${actor.talent_last_name}`).join(", ") }</p>
               </div>
             )}
             {Maybe(
               titleInfo.runtime,
               () => <div className="detail">
                 <label>Runtime</label>
-                { titleInfo.runtime } minutes
+                <p>{ titleInfo.runtime } minutes</p>
               </div>
             )}
             {Maybe(
               titleInfo.release_date,
               () => <div className="detail">
                 <label>Release Date</label>
-                { new Date(titleInfo.release_date).toLocaleDateString(this.props.siteStore.language || "en-US", {year: "numeric", month: "long", day: "numeric"}) }
+                <p>{ new Date(titleInfo.release_date).toLocaleDateString(this.props.siteStore.language || "en-US", {year: "numeric", month: "long", day: "numeric"}) }</p>
               </div>
             )}
             {Maybe(
-              genre,
+              titleInfo.genre,
               () => <div className="detail">
                 <label>Genre</label>
-                { genre.join(", ") }
+                <p>{ genre.join(", ") }</p>
               </div>
             )}
             {Maybe(
               titleInfo.creator,
               () => <div className="detail">
                 <label>Creator</label>
-                { titleInfo.creator }
+                <p>{ titleInfo.creator }</p>
               </div>
             )}
           </div>
           {Maybe(
             titleInfo.copyright,
             () => <div className="copyright">
-              { titleInfo.copyright.toString().startsWith("©") ? "" : "©" } { titleInfo.copyright}
+              <p>{ titleInfo.copyright.toString().startsWith("©") ? "" : "©" } { titleInfo.copyright}</p>
             </div>
           )}
         </div>
@@ -577,9 +579,9 @@ class ActiveTitle extends React.Component {
 
         <div className="video-info">
           <div className="video-info-text">
-            <h3>
+            <h1>
               { displayTitle.toString() }
-            </h3>
+            </h1>
             <div className="synopsis">
               <p>{ synopsis.toString() }</p>
             </div>

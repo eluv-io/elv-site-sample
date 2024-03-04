@@ -93,9 +93,9 @@ class App extends React.Component {
 
   SiteHeader() {
     if(this.props.siteStore.currentSite) {
-      return <h2>{ this.props.siteStore.currentSite.name }</h2>;
+      return <h3>{ this.props.siteStore.currentSite.name }</h3>;
     } else {
-      return <h2>Site Sample</h2>;
+      return <h3>Site Sample</h3>;
     }
   }
 
