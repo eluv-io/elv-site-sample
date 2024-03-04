@@ -1,7 +1,4 @@
 import "./static/stylesheets/app.scss";
-// import "dotenv/config";
-import BackIcon from "./static/icons/back.svg";
-import CloseIcon from "./static/icons/x.svg";
 
 import React from "react";
 import {render} from "react-dom";

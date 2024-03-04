@@ -3,10 +3,14 @@
 @import "./menu";
 
 @font-face {
-  font-family: "Inter", sans-serif;
-  src: url('https://fonts.googleapis.com/css2?family=Exo:wght@500;600&family=Inter:wght@100..900&display=swap');
+  font-family: 'Inter-Regular';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url("https://main.net955305.contentfabric.io/s/main/q/hq__5pArhXyXqfEmFrp6YbuyHkVV34CPa9LCEFSgSGkqp74DQTs35RGsCwzWV2Pr3M5P3TGb6fa2wf/files/fonts/Inter-Regular.ttf") format("truetype");
 }
 
+$main-font: 'Inter-Regular';
 $background-color: #15141d;
 $text-color: #fff;
 
@@ -27,7 +31,6 @@ $header-height: 3.5rem;
 
 html {
   // font-family: Helvetica Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-family: "Inter", sans-serif;
   font-size: 14px;
 }
 
@@ -40,6 +43,7 @@ html,
 body,
 .app,
 .app-container {
+  font-family: $main-font;
   min-height: 100vh;
 }
 
@@ -79,6 +83,7 @@ header {
   padding: 0 $elv-spacing-l;
 
   h2 {
+    font-family: $main-font;
     color: $text-color;
   }
 
@@ -107,7 +112,7 @@ input {
   background: $elv-color-bg-dark;
   border: 0;
   border-radius: $elv-spacing-xxs;
-  color: #465465;
+  color: #8f9cab;
   font-size: $elv-font-xl;
   padding: 0 $elv-spacing-xs;
   width: 20rem;
@@ -162,7 +167,7 @@ nav {
     background: transparent;
     border: 0;
     border-bottom: 3px solid transparent;
-    color: #465465;
+    color: #000;
     cursor: pointer;
     font-size: 1.15rem;
     height: 3rem;
@@ -171,12 +176,12 @@ nav {
     width: 12rem;
 
     &:focus {
-      border-bottom: 1px solid #465465;
+      border-bottom: 1px solid #8f9cab;
       outline: 0;
     }
 
     &.active-tab {
-      border-bottom: 3px solid #465465;
+      border-bottom: 3px solid #8f9cab;
     }
   }
 }
@@ -194,7 +199,7 @@ nav {
   // text-align: center;
   margin: 0.5rem 0;
   h4, svg {
-    color: #465465!important;
+    color: #000;
 
     &.back-button {
       height: 1.25rem;
@@ -229,7 +234,7 @@ nav {
 
 .site-subheader {
   @include elv-no-select;
-  color: $elv-color-text-lighter;
+  color: gray;
   font-size: $elv-font-xxl;
   margin-bottom: $elv-spacing-xxs;
   text-align: center;
@@ -247,7 +252,7 @@ nav {
   }
 
   .no-titles-message {
-    color: $elv-color-text-light;
+    color: #000;
     margin-left: $elv-spacing-s;
   }
 }
@@ -259,12 +264,12 @@ nav {
 
 .title-reel-header,
 .title-grid-header {
-  border-top: 2px solid #465465;
+  border-top: 2px solid #000;
   // font-size: 1.6rem;
   margin: $elv-spacing-s 0;
   padding: $elv-spacing-s $elv-spacing-s 0;
   width: 100%;
-  color: #465465;
+  color: #000;
 
   &:first-child {
     margin-top: 0;
@@ -383,25 +388,27 @@ nav {
   flex-direction: column;
   // border: 1px solid transparent;
   // border-radius: 1rem;
-  box-shadow: 3px 3px 15px #465465;
+  box-shadow: 3px 3px 15px #8f9cab;
   border-radius: 0.2rem;
-  background-color: #465465;
+  background-color: #8f9cab;
 
   .title-header {
     width: 100%;
     display: flex;
-    align-items: center;
+    // align-items: center;
     // justify-content: center;
     flex-wrap: wrap;
     // border: 1px solid #fff;
-    background-color: #465465;
+    background-color: #8f9cab;
     // padding: 1rem;
     height: 4rem;
     border-radius: 0.2rem;
-    border: 0.1rem solid #2e3844;
+    border: 0.1rem solid #707070;
 
     h4 {
+      padding-top: 0.5rem;
       width: 100%;
+      color: #000;
     }
   }
 
@@ -444,7 +451,7 @@ nav {
     position: relative;
     width: 100%;
     border-radius: 0.2rem;
-    border: 0.1rem solid #2e3844;
+    border: 0.1rem solid #707070;
     border-bottom: 0;
     // margin-bottom: 2.5rem;
 
@@ -592,7 +599,7 @@ nav {
 
   .synopsis {
     align-self: center;
-    color: #465465;
+    color: #8f9cab;
     max-height: 50%;
     // text-align: center;
   }
@@ -646,7 +653,7 @@ nav {
 
   h2 {
     // color: $elv-color-text-white;
-    color: #465465;
+    color: #8f9cab;
     font-size: 3.5rem;
     font-weight: 400;
     margin-bottom: $elv-spacing-m;
@@ -654,7 +661,7 @@ nav {
   }
 
   .synopsis {
-    color: #465465;
+    color: #8f9cab;
     display: flex;
     font-size: $elv-font-s;
     line-height: $elv-spacing-s;
@@ -670,8 +677,8 @@ nav {
     // padding: $elv-spacing-m 0;
 
     &:not(:empty) {
-      border-bottom: 1px solid #465465;
-      border-top: 1px solid #465465;
+      border-bottom: 1px solid #8f9cab;
+      border-top: 1px solid #8f9cab;
     }
   }
 

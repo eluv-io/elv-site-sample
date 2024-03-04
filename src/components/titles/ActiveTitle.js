@@ -457,7 +457,6 @@ class ActiveTitle extends React.Component {
 
   MetadataPage() {
     const title = this.props.siteStore.activeTitle;
-    console.log(title);
 
     return (
       <div className="active-title-metadata">

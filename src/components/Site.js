@@ -8,7 +8,6 @@ import SearchBar from "./SearchBar";
 
 import BackIcon from "../static/icons/back.svg";
 import CloseIcon from "../static/icons/x.svg";
-import { name } from "file-loader";
 
 @inject("rootStore")
 @inject("siteStore")
