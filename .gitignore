@@ -13,3 +13,5 @@ deploy.sh
 
 scratch/
 !.keep
+
+.env

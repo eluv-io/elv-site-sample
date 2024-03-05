@@ -8,6 +8,7 @@ import SearchBar from "./SearchBar";
 
 import BackIcon from "../static/icons/back.svg";
 import CloseIcon from "../static/icons/x.svg";
+import { name } from "file-loader";
 
 @inject("rootStore")
 @inject("siteStore")
@@ -29,12 +30,21 @@ class Site extends React.Component {
         </LoadingElement>
       );
     }
+    // console.log( "seasons", this.props.siteStore.currentSite.seasons);
+    // console.log( "series", this.props.siteStore.currentSite.series);
 
     return (
       <React.Fragment>
-        { this.props.siteStore.currentSite.playlists.map(playlist =>
+        {/* { this.props.siteStore.currentSite.playlists.map(playlist =>
           <TitleReel
             key={`title-reel-playlist-${playlist.playlistId}`}
+            name={playlist.name}
+            titles={playlist.titles}
+          />
+        )} */}
+        { this.props.siteStore.currentSite.playlists.map(playlist =>
+          <TitleGrid
+            key={`title-grid-playlist-${playlist.playlistId}`}
             name={playlist.name}
             titles={playlist.titles}
           />
@@ -74,29 +84,29 @@ class Site extends React.Component {
     }
 
     return (
-      <ImageIcon
-        key={`back-icon-${backText}`}
-        className="back-button"
-        title={backText}
-        icon={backIcon}
-        onClick={backAction}
-      />
+      <>
+        <ImageIcon
+          key={`back-icon-${backText}`}
+          className="back-button"
+          icon={backIcon}
+          onClick={backAction}
+        />
+        <h4 onClick={backAction}> {backText} </h4>
+      </>
     );
   }
 
   render() {
     if(!this.props.siteStore.currentSite) { return null; }
 
-    const mainSiteName = this.props.siteStore.sites[0].name;
     const subHeader = this.props.siteStore.sites.slice(1).map(site => site.name).join(" - ");
 
     return (
       <div className="site" id="site">
-        <h2 className={`site-header ${subHeader ? "with-subheader" : ""}`} hidden={false}>
+        <div className={`site-header ${subHeader ? "with-subheader" : ""}`} hidden={false}>
           { this.BackButton() }
-          { mainSiteName }
           <SearchBar key={`search-bar-${this.props.siteStore.searchQuery}`} />
-        </h2>
+        </div>
 
         { subHeader ? <h3 className="site-subheader">{ subHeader }</h3> : null }
 
@@ -109,3 +119,4 @@ class Site extends React.Component {
 }
 
 export default Site;
+

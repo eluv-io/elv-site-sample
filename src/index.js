@@ -1,4 +1,7 @@
 import "./static/stylesheets/app.scss";
+// import "dotenv/config";
+import BackIcon from "./static/icons/back.svg";
+import CloseIcon from "./static/icons/x.svg";
 
 import React from "react";
 import {render} from "react-dom";
@@ -91,12 +94,22 @@ class App extends React.Component {
     }
   }
 
+  SiteHeader() {
+    if(this.props.siteStore.currentSite) {
+      return <h2>{ this.props.siteStore.currentSite.name }</h2>;
+    } else {
+      return <h2>Site Sample</h2>;
+    }
+  }
+
   render() {
+
     return (
       <div className="app-container">
         <header>
           <ImageIcon className="logo" icon={Logo} label="Eluvio" onClick={this.props.rootStore.ReturnToApps}/>
           { this.Localization() }
+          { this.SiteHeader() }
           { this.SourceLink() }
         </header>
         <main>

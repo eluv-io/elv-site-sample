@@ -56,7 +56,7 @@ module.exports = {
       template: Path.join(__dirname, "src", "index.html"),
       cache: false,
       filename: "index.html",
-      favicon: "node_modules/elv-components-js/src/icons/favicon.png"
+      favicon: "src/static/icons/favicon.png"
     })
     //, new BundleAnalyzerPlugin()
   ],

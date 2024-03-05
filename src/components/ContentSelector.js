@@ -13,9 +13,12 @@ class ContentSelector extends React.Component {
   constructor(props) {
     super(props);
 
+    // const demoPaladin = "ilib2HWBxwsXrgtRzgMVVxAzm1oPH53U";
+    const communityProperties = "ilib2dWFKVv497XsTgdAiiW82Fq4aV5Y";
+
     this.state = {
       showAvailableSites: true,
-      libraryId: "",
+      libraryId: communityProperties,
       page: 1,
       perPage: 10,
       filter: "",
@@ -222,12 +225,14 @@ class ContentSelector extends React.Component {
 
   render() {
     const showAvailable = this.props.rootStore.availableSites && this.props.rootStore.availableSites.length > 0 && this.state.showAvailableSites;
+    // console.log(this.props.rootStore);
+    // console.log(this.props.siteStore);
 
     return (
       <AsyncComponent Load={this.props.rootStore.LoadAvailableSites}>
         <div className="menu-container">
-          <h1>Select a Site</h1>
           { this.Tabs() }
+          <h3>Select a Site</h3>
           { showAvailable ? this.AvailableSites() : (this.state.libraryId ? this.Objects() : this.Libraries()) }
         </div>
       </AsyncComponent>
