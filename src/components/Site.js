@@ -8,7 +8,6 @@ import SearchBar from "./SearchBar";
 
 import BackIcon from "../static/icons/back.svg";
 import CloseIcon from "../static/icons/x.svg";
-import { name } from "file-loader";
 
 @inject("rootStore")
 @inject("siteStore")
@@ -30,18 +29,9 @@ class Site extends React.Component {
         </LoadingElement>
       );
     }
-    // console.log( "seasons", this.props.siteStore.currentSite.seasons);
-    // console.log( "series", this.props.siteStore.currentSite.series);
 
     return (
       <React.Fragment>
-        {/* { this.props.siteStore.currentSite.playlists.map(playlist =>
-          <TitleReel
-            key={`title-reel-playlist-${playlist.playlistId}`}
-            name={playlist.name}
-            titles={playlist.titles}
-          />
-        )} */}
         { this.props.siteStore.currentSite.playlists.map(playlist =>
           <TitleGrid
             key={`title-grid-playlist-${playlist.playlistId}`}
@@ -91,7 +81,7 @@ class Site extends React.Component {
           icon={backIcon}
           onClick={backAction}
         />
-        <h4 onClick={backAction}> {backText} </h4>
+        <p onClick={backAction}> {backText} </p>
       </>
     );
   }

@@ -1,7 +1,7 @@
 import {configure, observable, action, flow, runInAction} from "mobx";
 import {FrameClient} from "@eluvio/elv-client-js/src/FrameClient";
 import SiteStore from "./Site";
-// import 'dotenv/config';
+import "dotenv";
 
 
 // Force strict mode so mutations are only allowed within actions.
@@ -37,29 +37,16 @@ class RootStore {
     this.client = undefined;
 
     let client;
+
     // Initialize ElvClient or FrameClient
-
-    // const privateKey= "0x659b6b2d71b17ab773d7a64d99c52439f0528eeacaee586d8c629cd8338b6214";
-    // const buff = Buffer.from(privateKey).toString('base64');
-    // console.log(buff);
-
-    //  const dotenv = require("dotenv").config();
-    // const variableExpansion = require('dotenv-expand')
-    // console.log(dotenv);
-    // variableExpansion(myEnv)
     if(window.self === window.top) {
       const ElvClient = (yield import("@eluvio/elv-client-js")).ElvClient;
 
       client = yield ElvClient.FromConfigurationUrl({configUrl: EluvioConfiguration["config-url"]});
 
       const wallet = client.GenerateWallet();
-      // console.log("wallet", wallet);
-      // const mnemonic = wallet.GenerateMnemonic();
-
-      // console.log("env", process.env);
-      const signer = wallet.AddAccount({
-        privateKey: "0x32fdc6b83ffc4c513c6a2545dec723f636314ede297e269c3bb620f3bc67555b"
-      });
+      const mnemonic = wallet.GenerateMnemonic();
+      const signer = wallet.AddAccountFromMnemonic({mnemonic});
 
       client.SetSigner({signer});
     } else {

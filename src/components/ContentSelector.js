@@ -1,10 +1,6 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
-import {AsyncComponent, IconButton, ImageIcon, onEnterPressed} from "elv-components-js";
-
-import BackIcon from "../static/icons/back.svg";
-import PageBack from "../static/icons/Backward.svg";
-import PageForward from "../static/icons/Forward.svg";
+import {AsyncComponent, onEnterPressed} from "elv-components-js";
 
 @inject("rootStore")
 @inject("siteStore")
@@ -13,14 +9,11 @@ class ContentSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    // const demoPaladin = "ilib2HWBxwsXrgtRzgMVVxAzm1oPH53U";
-    const communityProperties = "ilib2dWFKVv497XsTgdAiiW82Fq4aV5Y";
-
     this.state = {
       showAvailableSites: true,
-      libraryId: communityProperties,
+      libraryId,
       page: 1,
-      perPage: 10,
+      perPage: 20,
       filter: "",
       filterInput: "",
       cacheId: "",
@@ -57,16 +50,10 @@ class ContentSelector extends React.Component {
     return (
       <div className="menu-entries" key={`menu-entries-${this.state.libraryId}`}>
         <h4>
-          <ImageIcon
-            label="Back"
-            className="back-button"
-            icon={BackIcon}
-            onClick={() => this.setState({libraryId: "", cacheId: "", count: 0, page: 1})}
-          />
-          {library ? library.name : ""}
+          Library: <span>{library ? library.name : ""}</span>
         </h4>
 
-        <div className="menu-page-controls">
+        {/* <div className="menu-page-controls">
           <IconButton
             hidden={this.state.page === 1}
             icon={PageBack}
@@ -109,7 +96,7 @@ class ContentSelector extends React.Component {
               }, 500);
             }}
           />
-        </div>
+        </div> */}
 
         <AsyncComponent
           key={`objects-container-${this.state.filter}-${this.state.page}-${this.state.libraryId}`}
@@ -136,7 +123,7 @@ class ContentSelector extends React.Component {
                     .sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
                     .map(object => {
                       const onClick = () => this.props.siteStore.LoadSite(object.objectId);
-
+          
                       return (
                         <li
                           tabIndex={0}
@@ -144,7 +131,8 @@ class ContentSelector extends React.Component {
                           onKeyPress={onEnterPressed(onClick)}
                           key={`content-object-${object.objectId}`}
                         >
-                          { object.name }
+                          <h4>{ object.name }</h4>
+                          <p className="menu-entry-version">Version: <span>{ object.versionHash }</span></p>
                         </li>
                       );
                     })
@@ -225,14 +213,11 @@ class ContentSelector extends React.Component {
 
   render() {
     const showAvailable = this.props.rootStore.availableSites && this.props.rootStore.availableSites.length > 0 && this.state.showAvailableSites;
-    // console.log(this.props.rootStore);
-    // console.log(this.props.siteStore);
-
     return (
       <AsyncComponent Load={this.props.rootStore.LoadAvailableSites}>
         <div className="menu-container">
           { this.Tabs() }
-          <h3>Select a Site</h3>
+          <h3>Select your Eluvio Site Object</h3>
           { showAvailable ? this.AvailableSites() : (this.state.libraryId ? this.Objects() : this.Libraries()) }
         </div>
       </AsyncComponent>

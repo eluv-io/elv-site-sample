@@ -178,13 +178,11 @@ class SiteStore {
       const versionHash = yield this.client.LatestVersionHash({objectId});
 
       if(this.rootStore.usePolicy) {
-        // console.log("sw", this.rootStore.usePolicy);
         // If policy ID is specified in the site, use policy authorization
         const policyId = yield this.client.ContentObjectMetadata({
           versionHash,
           metadataSubtree: "public/policyId"
         });
-        // console.log(policyId);
 
         if(policyId) {
           yield this.client.SetPolicyAuthorization({objectId: policyId});
@@ -310,7 +308,6 @@ class SiteStore {
         try {
           const titleKey = Object.keys(titleInfo[index])[0];
           let title = titleInfo[index][titleKey];
-          // console.log("title",  title); 
           title.versionHash = title["."].source;
 
 
@@ -332,14 +329,10 @@ class SiteStore {
           title.objectId = this.client.utils.DecodeVersionHash(title.versionHash).objectId;
 
           title.titleId = Id.next();
-          // console.log("empieza aqui", metadataKey);
           const linkPath = UrlJoin("public", "asset_metadata", metadataKey, index, titleKey);
           title.playoutLinksPath = UrlJoin(linkPath, "sources");
           title.baseLinkPath = linkPath;
           title.baseLinkUrl = await this.client.LinkUrl({versionHash, linkPath});
-          // console.log(title.baseLinkUrl);
-
-          // console.log("display image in site", this.display_image);
 
           Object.assign(title, await this.ImageLinks({baseLinkUrl: title.baseLinkUrl, images: title.images, versionHash: title.versionHash, objectId: title.objectId}));
 
@@ -616,8 +609,6 @@ class SiteStore {
             const linkPath = UrlJoin("public", "asset_metadata");
             const playoutLinksPath = UrlJoin(linkPath, "sources");
             const baseLinkPath = linkPath;
-            // console.log("playout link path", playoutLinksPath)
-            // console.log("base link path", baseLinkPath)
             const baseLinkUrl = await this.client.LinkUrl({versionHash: hash, linkPath});
             const imageLinks = await this.ImageLinks({versionHash: hash, images: meta.images});
 
