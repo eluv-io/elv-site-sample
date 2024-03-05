@@ -58,8 +58,6 @@
 .site-selection {
   @include elv-no-select;
   align-items: center;
-  // display: flex;
-  // flex: 1 1 auto;
 
   .menu-filter {
     margin-bottom: $elv-spacing-xs;
@@ -165,9 +163,6 @@
 
       &:not(:active):hover,
       &:hover {
-        // background: $elv-color-mediumblue;
-        // border: 0;
-        // color: $elv-color-text-white;
         background-color: #8f9cab;
         border: 1px solid #8f9cab;
         color: #fff;

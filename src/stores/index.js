@@ -45,13 +45,8 @@ class RootStore {
       client = yield ElvClient.FromConfigurationUrl({configUrl: EluvioConfiguration["config-url"]});
 
       const wallet = client.GenerateWallet();
-
-      // console.log(process.env);
-      // console.log("env", process.env.PRIVATE_KEY);
-
-      const signer = wallet.AddAccount({
-        privateKey: process.env.PRIVATE_KEY
-      });
+      const mnemonic = wallet.GenerateMnemonic();
+      const signer = wallet.AddAccountFromMnemonic({mnemonic});
 
       client.SetSigner({signer});
     } else {

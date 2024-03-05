@@ -2,10 +2,6 @@ import React from "react";
 import {inject, observer} from "mobx-react";
 import {AsyncComponent, onEnterPressed} from "elv-components-js";
 
-// import BackIcon from "../static/icons/back.svg";
-// import PageBack from "../static/icons/Backward.svg";
-// import PageForward from "../static/icons/Forward.svg";
-
 @inject("rootStore")
 @inject("siteStore")
 @observer
@@ -13,12 +9,9 @@ class ContentSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    // const demoPaladin = "ilib2HWBxwsXrgtRzgMVVxAzm1oPH53U";
-    const communityProperties = "ilib2dWFKVv497XsTgdAiiW82Fq4aV5Y";
-
     this.state = {
       showAvailableSites: true,
-      libraryId: communityProperties,
+      libraryId,
       page: 1,
       perPage: 20,
       filter: "",
@@ -57,12 +50,6 @@ class ContentSelector extends React.Component {
     return (
       <div className="menu-entries" key={`menu-entries-${this.state.libraryId}`}>
         <h4>
-          {/* <ImageIcon
-            label="Back"
-            className="back-button"
-            icon={BackIcon}
-            onClick={() => this.setState({libraryId: "", cacheId: "", count: 0, page: 1})}
-          /> */}
           Library: <span>{library ? library.name : ""}</span>
         </h4>
 

@@ -32,13 +32,6 @@ class Site extends React.Component {
 
     return (
       <React.Fragment>
-        {/* { this.props.siteStore.currentSite.playlists.map(playlist =>
-          <TitleReel
-            key={`title-reel-playlist-${playlist.playlistId}`}
-            name={playlist.name}
-            titles={playlist.titles}
-          />
-        )} */}
         { this.props.siteStore.currentSite.playlists.map(playlist =>
           <TitleGrid
             key={`title-grid-playlist-${playlist.playlistId}`}
