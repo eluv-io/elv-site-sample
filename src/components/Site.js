@@ -29,8 +29,6 @@ class Site extends React.Component {
         </LoadingElement>
       );
     }
-    // console.log( "seasons", this.props.siteStore.currentSite.seasons);
-    // console.log( "series", this.props.siteStore.currentSite.series);
 
     return (
       <React.Fragment>
