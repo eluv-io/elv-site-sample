@@ -11,7 +11,7 @@ class ContentSelector extends React.Component {
 
     this.state = {
       showAvailableSites: true,
-      libraryId,
+      libraryId: "",
       page: 1,
       perPage: 20,
       filter: "",
