@@ -1,7 +1,7 @@
 import {configure, observable, action, flow, runInAction} from "mobx";
 import {FrameClient} from "@eluvio/elv-client-js/src/FrameClient";
 import SiteStore from "./Site";
-import "dotenv";
+// import "dotenv";
 
 
 // Force strict mode so mutations are only allowed within actions.
